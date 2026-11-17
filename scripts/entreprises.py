@@ -7,8 +7,8 @@ gèrent des gammes de produits (agroalimentaire, boissons, cosmétique, pharmaci
 plastique, articles de sport, dispositifs médicaux, commerce de gros de produits de marque).
 
 Sortie : data/entreprises_63.csv (et une copie datée dans data/AAAA-MM-JJ/).
-RGPD : seuls les dirigeants inscrits au registre (donnée publique) sont repris, avec leur fonction.
-Aucun salarié n'est collecté.
+RGPD : le dépôt est public, donc aucun nom de personne n'est enregistré (ni dirigeant, ni salarié) :
+seulement l'entreprise, son activité, sa taille et sa commune.
 """
 import csv
 import datetime as dt
@@ -72,26 +72,19 @@ def main():
             m = (e.get("matching_etablissements") or [])
             loc = next((x for x in m if str(x.get("code_postal") or "").startswith("63")), s)
             naf = e.get("activite_principale") or s.get("activite_principale") or ""
-            dirs = []
-            for p in e.get("dirigeants") or []:
-                if p.get("type_dirigeant") == "personne physique":
-                    dirs.append(f"{(p.get('prenoms') or '').split(' ')[0]} {p.get('nom') or ''} ({p.get('qualite') or 'dirigeant'})".strip())
-                else:
-                    dirs.append(f"{p.get('denomination') or ''} ({p.get('qualite') or 'dirigeant'})".strip())
             lignes.append({
                 "siren": e.get("siren"), "nom": e.get("nom_complet"), "commune": loc.get("libelle_commune"),
                 "code_postal": loc.get("code_postal"), "siege_hors_63": not str(s.get("code_postal") or "").startswith("63"), "naf": naf, "activite": NAF.get(naf, ""),
                 "famille": FAMILLE.get(naf[:2], ""), "effectif": TRANCHES.get(str(e.get("tranche_effectif_salarie") or ""), ""),
                 "categorie": e.get("categorie_entreprise"), "date_creation": e.get("date_creation"),
                 "etablissements": e.get("nombre_etablissements"), "latitude": loc.get("latitude"), "longitude": loc.get("longitude"),
-                "dirigeants": " ; ".join(dirs[:4]),
                 "fiche": f"https://annuaire-entreprises.data.gouv.fr/entreprise/{e.get('siren')}",
             })
         if page >= (d.get("total_pages") or 1):
             break
         time.sleep(0.3)
     champs = ["siren", "nom", "commune", "code_postal", "siege_hors_63", "naf", "activite", "famille", "effectif", "categorie",
-              "date_creation", "etablissements", "latitude", "longitude", "dirigeants", "fiche"]
+              "date_creation", "etablissements", "latitude", "longitude", "fiche"]
     os.makedirs(os.path.join(RACINE, "data", AUJ), exist_ok=True)
     dest = os.path.join(RACINE, "data", "entreprises_63.csv")
     with open(dest, "w", newline="", encoding="utf-8") as f:

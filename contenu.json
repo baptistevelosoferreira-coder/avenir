@@ -1,0 +1,71 @@
+{
+  "_lisez_moi": "Textes rédigés à la main, que le script site.py insère dans la page. Passer a_valider à false une fois le texte relu et corrigé par Baptiste.",
+  "auteur": "Baptiste Veloso Ferreira",
+  "formation": "M2 Marketing opérationnel et digital, IAE Clermont Auvergne (2025-2027)",
+  "recherche": "Stage de fin d'études d'assistant chef de produit, de janvier à septembre 2027 (rythme alterné 2 semaines / 2 semaines jusqu'à fin mars, puis temps plein à partir du 29 mars), ou alternance sur la même période.",
+  "formation_donne": [
+    "mix marketing",
+    "gestion de gamme",
+    "diagnostic stratégique",
+    "marketing digital",
+    "étude de marché",
+    "veille concurrentielle",
+    "réseaux sociaux",
+    "excel",
+    "powerpoint",
+    "canva",
+    "ia générative",
+    "lancement de produit"
+  ],
+  "intervenants": {
+    "a_valider": true,
+    "liste": [
+      {
+        "nom": "Clément Dos Santos",
+        "date": "24 septembre 2026",
+        "structure": "DBM, agence digitale",
+        "ce_qu_il_a_dit": ""
+      },
+      {
+        "nom": "Samir Aouiche",
+        "date": "14 octobre 2026",
+        "structure": "Laboratoires Théa",
+        "ce_qu_il_a_dit": ""
+      }
+    ]
+  },
+  "professionnels": {
+    "a_valider": true,
+    "regle": "Repérés à la main sur LinkedIn (pas d'aspiration automatique). Seuls le nom, l'intitulé de poste et l'entreprise sont notés, dans le but d'une candidature ; la personne peut demander à être retirée.",
+    "liste": []
+  },
+  "actions": {
+    "a_valider": true,
+    "liste": [
+      {
+        "date": "30 novembre 2026",
+        "action": "Avoir envoyé une candidature à chaque offre de stage démarrant en janvier repérée par la veille, avec CV et lettre adaptés.",
+        "preuve": "Le compteur « candidatures envoyées » de la section Actions, mis à jour à chaque envoi, et les dates d'envoi dans mon tableau de suivi."
+      },
+      {
+        "date": "17 décembre 2026",
+        "action": "Poser à Samir Aouiche (Laboratoires Théa) les trois questions tirées de mes chiffres, listées dans la section Évolution.",
+        "preuve": "Ses réponses ajoutées à la section Évolution du site."
+      },
+      {
+        "date": "15 janvier 2027",
+        "action": "Contacter cinq entreprises du marché caché du Puy-de-Dôme (agroalimentaire et pharmacie) par leur page carrière ou leur service RH, même sans offre publiée.",
+        "preuve": "La liste des cinq entreprises, la date de chaque envoi et les réponses, dans data/actions.csv."
+      }
+    ]
+  },
+  "position": {
+    "a_valider": true,
+    "texte": "Le marché du stage de chef de produit existe, mais il est concentré : trois offres localisées sur quatre sont en Île-de-France, et quand l'annonce donne une date, trois sur quatre démarrent en janvier, le plus souvent pour six mois. Ce sont surtout des grands groupes de grande consommation, de distribution et de santé qui publient. Je cherche donc en priorité un stage d'assistant chef de produit en grande consommation ou en santé, à Paris ou à Lyon, à partir de janvier 2027, sans écarter l'alternance. En parallèle, je prospecte le marché caché du Puy-de-Dôme, où des entreprises qui gèrent des gammes de produits recrutent sans publier."
+  },
+  "questions_intervenants": [
+    "Mes chiffres montrent que la rigueur et l'analyse reviennent dans la majorité des annonces : comment les évaluez-vous concrètement chez un stagiaire chef de produit ?",
+    "Les panels (Nielsen, IRI, Kantar) apparaissent dans peu d'annonces mais sont absents de ma formation : faut-il les apprendre avant le stage, ou s'apprennent-ils sur le poste ?",
+    "L'APEC classe le chef de produit parmi les métiers où l'IA est le plus citée : quelles tâches de chef de produit l'IA a-t-elle déjà changées dans votre entreprise ?"
+  ]
+}

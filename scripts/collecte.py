@@ -145,7 +145,7 @@ def adzuna():
                 "contrat_temps": x.get("contract_time", ""), "salaire_min": x.get("salary_min"),
                 "salaire_max": x.get("salary_max"), "salaire_estime_par_adzuna": x.get("salary_is_predicted"),
                 "categorie": (x.get("category") or {}).get("label", ""), "description_extrait": propre(x.get("description"), 600),
-                "latitude": x.get("latitude"), "longitude": x.get("longitude"), "url": x.get("redirect_url", ""),
+                "latitude": x.get("latitude"), "longitude": x.get("longitude"), "url": (x.get("redirect_url") or "").split("?")[0],
             })
         if len(res) < 50:
             break
