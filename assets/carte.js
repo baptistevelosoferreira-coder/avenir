@@ -7,7 +7,20 @@
   var MOIS = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."];
   function date(d) { var p = d.split("-"); return p.length === 3 ? (+p[2]) + " " + MOIS[+p[1] - 1] : d; }
   function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
-  function offres() { return D.offres.filter(function (o) { return filtre === "Tous" || o.c === filtre; }); }
+  var q = "", recent = false, champ = document.getElementById("q"), caseRecent = document.getElementById("recent");
+  var jour = function (d) { return Date.parse(d + "T00:00:00Z") / 864e5; };
+  var fin = Math.max.apply(null, D.offres.map(function (o) { return jour(o.d) || 0; }));
+  function sansAccent(t) { return String(t).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); }
+  function offres() {
+    var mots = sansAccent(q).split(/\s+/).filter(Boolean);
+    return D.offres.filter(function (o) {
+      if (filtre !== "Tous" && o.c !== filtre) return false;
+      if (recent && fin - jour(o.d) > 14) return false;
+      if (!mots.length) return true;
+      var t = sansAccent(o.t + " " + o.e + " " + o.v);
+      return mots.every(function (m) { return t.indexOf(m) >= 0; });
+    });
+  }
   function parVille() {
     var m = {};
     offres().forEach(function (o) { (m[o.v] = m[o.v] || []).push(o); });
@@ -39,7 +52,8 @@
     });
   }
   function carteOffre(o) {
-    return '<li><div class="o-haut"><span class="tag ' + (o.c === "Alternance" ? "alt" : "st") + '">' + o.c + '</span><span class="o-date">' + date(o.d) + '</span></div>' +
+    var neuf = fin - jour(o.d) <= 3;
+    return '<li><div class="o-haut"><span><span class="tag ' + (o.c === "Alternance" ? "alt" : "st") + '">' + o.c + '</span>' + (neuf ? ' <span class="tag new">Nouveau</span>' : "") + '</span><span class="o-date">' + date(o.d) + '</span></div>' +
       '<b>' + esc(o.t) + '</b><span class="o-ent">' + esc(o.e) + '</span>' +
       (o.u ? '<a href="' + esc(o.u) + '" target="_blank" rel="noopener">Voir l\'annonce ↗</a>' : "") + "</li>";
   }
@@ -52,6 +66,7 @@
       panneau.querySelector(".retour").addEventListener("click", function () { choisie = null; dessiner(); liste(); });
     } else {
       var max = vs.length ? vs[0].l.length : 1;
+      if (!tot) { panneau.innerHTML = '<div class="p-tete"><h4>Aucune offre</h4><p>Aucune offre ne correspond. Essaie un autre mot ou décoche le filtre.</p></div>'; return; }
       panneau.innerHTML = '<div class="p-tete"><h4>' + tot + " offre" + (tot > 1 ? "s" : "") + (filtre !== "Tous" ? " (" + filtre.toLowerCase() + "s)" : "") + '</h4><p>Choisis une ville sur la carte ou dans la liste.</p></div><ul class="villes">' +
         vs.map(function (c) { return '<li><button type="button" data-v="' + esc(c.v) + '"><span>' + esc(c.v) + '</span><i style="width:' + (100 * c.l.length / max).toFixed(0) + '%"></i><b>' + c.l.length + "</b></button></li>"; }).join("") + "</ul>";
       Array.prototype.forEach.call(panneau.querySelectorAll("[data-v]"), function (b) {
@@ -64,6 +79,16 @@
       filtre = b.getAttribute("data-f");
       Array.prototype.forEach.call(document.querySelectorAll(".filtres button"), function (x) { x.classList.toggle("on", x === b); });
       dessiner(); liste();
+    });
+  });
+  function maj() { choisie = null; dessiner(); liste(); }
+  if (champ) champ.addEventListener("input", function () { q = champ.value; maj(); });
+  if (caseRecent) caseRecent.addEventListener("change", function () { recent = caseRecent.checked; maj(); });
+  Array.prototype.forEach.call(document.querySelectorAll(".lien-q"), function (b) {
+    b.addEventListener("click", function () {
+      q = b.getAttribute("data-q"); if (champ) champ.value = q; maj();
+      var vs = parVille(); if (vs.length === 1) { choisie = vs[0].v; dessiner(); liste(); }
+      document.querySelector(".carte").scrollIntoView({ behavior: "smooth", block: "start" });
     });
   });
   dessiner(); liste();

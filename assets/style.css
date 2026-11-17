@@ -371,3 +371,57 @@ details.plus[open] summary { margin-bottom: 10px; }
   .panneau { max-height: 380px; }
 }
 h3.sous { margin: 26px 0 12px; font-size: 22px; color: #fff; text-shadow: 0 2px 14px rgba(10, 50, 28, .25); }
+
+/* ===== Améliorations : en bref, outils de la carte, atouts, entonnoir, stratégie ===== */
+.bref { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 0 0 16px; }
+.bref > div { background: #fff; border-radius: 18px; padding: 16px 18px; box-shadow: 0 14px 34px rgba(16, 60, 34, .16); display: grid; gap: 4px; align-content: start; }
+.bref b { font: 800 28px/1.1 var(--display); color: #0b2a18; }
+.bref > div:last-child b { font-size: 18px; line-height: 1.25; }
+.bref span { font-size: 14px; color: #1d3326; font-weight: 600; line-height: 1.35; }
+.bref small { font-size: 12px; color: #6b8577; }
+.outils-carte { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; margin: 0 0 10px; }
+.recherche { flex: 1 1 320px; }
+.recherche input { width: 100%; font: 15px var(--sans); padding: 10px 14px; border: 1px solid #cfe1d5; border-radius: 12px; background: #fff; color: #12301f; }
+.recherche input:focus { outline: 2px solid #2f8a52; border-color: transparent; }
+.recent { font-size: 14px; color: #24513a; display: inline-flex; gap: 8px; align-items: center; cursor: pointer; }
+.recent input { width: 17px; height: 17px; accent-color: #1f5c3b; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.tag.new { background: #f3b33d; color: #3a2700; }
+.lien-q { font: inherit; color: #1f6e42; background: none; border: 0; padding: 0; cursor: pointer; text-align: left; text-decoration: underline; text-decoration-color: rgba(31, 110, 66, .35); text-underline-offset: 3px; }
+.lien-q:hover { color: #0b2a18; text-decoration-color: currentColor; }
+.conseils { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.conseils li { background: #fff7ea; border: 1px solid #f3e1bd; border-radius: 12px; padding: 10px 12px; }
+.conseils li div { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+.conseils b { color: #12301f; font-size: 15px; }
+.n-ann { font: 12px var(--mono); color: #8a6a00; white-space: nowrap; }
+.conseils p { margin: 4px 0 0; font-size: 14px; color: #4b4130; }
+.qualites { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 4px 0 12px; }
+.qualites div { background: #f3f8f4; border: 1px solid #e0ece4; border-radius: 14px; padding: 12px 14px; display: grid; gap: 2px; }
+.qualites b { font: 800 26px/1 var(--display); color: #1f5c3b; }
+.qualites span { font-size: 14px; color: #12301f; }
+.ent-liens { display: flex; gap: 12px; flex-wrap: wrap; margin: 6px 0 0; font-size: 13px; font-weight: 600; }
+.entonnoir { display: grid; gap: 12px; }
+.et { display: grid; grid-template-columns: 140px 1fr; grid-template-rows: auto auto; column-gap: 14px; align-items: center; }
+.et-lab { display: flex; align-items: baseline; gap: 8px; grid-row: span 2; }
+.et-lab b { font: 800 30px/1 var(--display); color: #0b2a18; }
+.et-lab span { font-size: 14px; font-weight: 600; color: #24513a; }
+.et-bar { height: 14px; background: #e3eee6; border-radius: 99px; overflow: hidden; }
+.et-bar span { display: block; height: 100%; background: linear-gradient(90deg, #1f5c3b, #6fcf86); border-radius: 99px; }
+.et small { font-size: 12px; color: #6b8577; }
+.todo-liste { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.todo-liste li { display: flex; align-items: center; gap: 14px; background: #f3f8f4; border: 1px solid #e0ece4; border-radius: 14px; padding: 12px 16px; }
+.todo-liste b { font: 800 28px/1 var(--display); color: #1f5c3b; min-width: 64px; }
+.todo-liste span { font-size: 15px; color: #12301f; }
+.position > p { font-size: 17px; margin-bottom: 18px; }
+.prios { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.prio { background: #f3f8f4; border: 1px solid #e0ece4; border-radius: 18px; padding: 18px; display: grid; gap: 6px; align-content: start; }
+.prio i { font: 700 12px var(--mono); font-style: normal; text-transform: uppercase; letter-spacing: .08em; color: #2f8a52; }
+.prio b { font: 700 18px/1.25 var(--display); color: #0b2a18; }
+.prio p { margin: 0; font-size: 15px; line-height: 1.55; color: #3c5a49; }
+@media (max-width: 900px) {
+  .bref, .prios { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 520px) {
+  .bref, .prios { grid-template-columns: 1fr; }
+  .et { grid-template-columns: 1fr; }
+}

@@ -317,7 +317,9 @@ def construire():
     carte_html = f'''<div class="card carte">
 <div class="carte-tete"><h3>La carte des offres</h3><div class="filtres" role="group" aria-label="Filtrer par contrat">
 <button type="button" data-f="Tous" class="on">Tout</button><button type="button" data-f="Stage">Stages</button><button type="button" data-f="Alternance">Alternances</button></div></div>
-<p class="hint">Les {n_loc} offres de stage et d'alternance de chef de produit repérées {periode}. <b>Clique sur une ville</b> pour voir ses offres et ouvrir les annonces.</p>
+<div class="outils-carte"><label class="recherche"><span class="sr">Chercher</span><input type="search" id="q" placeholder="Chercher une entreprise ou un mot (ex. Danone, santé, junior)"></label>
+<label class="recent"><input type="checkbox" id="recent"> Moins de 14 jours seulement</label></div>
+<p class="hint">Les {n_loc} offres de stage et d'alternance de chef de produit repérées {periode}. <b>Clique sur une ville</b> pour voir ses offres et ouvrir les annonces ; le badge <span class="tag new">Nouveau</span> marque les offres de moins de 3 jours.</p>
 <div class="carte-corps"><div class="carte-svg"><svg id="carte" viewBox="0 0 420 410" role="img" aria-label="Carte de France des offres">
 <path class="land" d="{chemin(FRANCE)}"/><path class="land" d="{chemin(CORSE)}"/><g id="bulles"></g>
 <circle class="home" cx="{hx:.1f}" cy="{hy:.1f}" r="7"/><text class="city muted" x="{hx - 10:.1f}" y="{hy + 4:.1f}" text-anchor="end">Clermont-Fd</text></svg>
@@ -362,9 +364,11 @@ def construire():
         debuts[k] += 1
     dates_ok = sum(v for k, v in debuts.items() if k not in ("Non précisé", "Dès que possible"))
     duree6 = sum(1 for a in annonces if "6 mois" in norm(a["duree"]))
-    s2 = [s1[0].replace("<b>À retenir</b>", "<b>Le bon mot-clé</b>"), retenir(f"<b>{pct(n_idf, n_loc)}</b> des offres sont en Île-de-France et <b>{n_clermont}</b> autour de Clermont. "
-                  f"Quand la date est donnée, <b>{pct(debuts['Janvier'], dates_ok)}</b> des stages commencent en janvier, souvent pour 6 mois. "
-                  + (f"La gratification médiane affichée est de <b>{nombre(med)} €</b> brut par mois." if med else ""))]
+    bref = [(pct(n_idf, n_loc), "des offres sont en Île-de-France", f"contre {lyon} à Lyon et {n_clermont} à Clermont"),
+            (pct(debuts["Janvier"], dates_ok), "des stages datés commencent en janvier", f"{duree6} annonces sur {n_annonces} durent 6 mois"),
+            (f"{nombre(med)} €" if med else "–", "de gratification médiane par mois", "montant brut affiché dans l'annonce"),
+            ("« Assistant chef de produit »", "le mot-clé qui ramène le plus d'offres", "puis « product manager », « brand manager »")]
+    s2 = ['<div class="bref">' + "".join(f'<div><b>{v}</b><span>{l}</span><small>{n}</small></div>' for v, l, n in bref) + "</div>"]
     s2.append(carte_html)
     pay = ""
     if grat:
@@ -392,12 +396,35 @@ def construire():
     ns = sorted([x for x in compter(textes_annonces, SAVOIRS) if x[1]], key=lambda l: -l[1])[:7]
     badge = lambda k: {"cv": '<i class="b ok">sur mon CV</i>', "formation": '<i class="b ok">vu en M2</i>', "non": '<i class="b gap">à travailler</i>'}.get(k, "")
     manque = [n for n, v, k in compter(textes_annonces, OUTILS) + compter(textes_annonces, SAVOIRS) if k == "non" and v >= 3]
-    s3 = [retenir(f"Les recruteurs cherchent d'abord <b>{e(nq[0][0].lower())}</b> et <b>{e(nq[1][0].lower())}</b>, et Excel reste l'outil le plus cité. "
-                  f"Ce qui me manque le plus souvent : <b>{e(', '.join(m for m in manque if m != 'Word')[:0] or ', '.join([m for m in manque if m != 'Word'][:2]))}</b>." if nq and manque else "Ce que les annonces demandent, comparé à mon profil."),
-          f'<div class="grid3"><div class="card"><h3>Qualités</h3><p class="hint">Sur {len(profils)} annonces.</p>{barres([(e(n), v) for n, v in nq], maxi=len(profils))}</div>'
-          f'<div class="card"><h3>Outils</h3><p class="hint">Sur {n_annonces} annonces.</p>{barres([(e(n) + "<br>" + badge(k), v) for n, v, k in no], maxi=n_annonces)}</div>'
-          f'<div class="card"><h3>Savoir-faire</h3><p class="hint">Sur {n_annonces} annonces.</p>{barres([(e(n) + "<br>" + badge(k), v) for n, v, k in ns], maxi=n_annonces)}</div></div>'
-          + source("Annonces lues en entier", "Mots-clés cherchés dans les missions et le profil (liste dans scripts/site.py)", annonces[-1]["date_veille"] if annonces else "", "Comptage par mots-clés : une annonce qui cite une qualité une fois compte autant qu une annonce qui insiste.", "data/annonces-lues.csv")]
+    CONSEILS = {
+        "Panels Nielsen, IRI, Kantar, Circana": "Revoir les bases (part de marché, distribution numérique et valeur) pour en parler en entretien : l'outil s'apprend sur le poste.",
+        "Packaging, chaîne graphique": "Connaître les étapes d'un packaging (brief agence, BAT, impression) et en analyser un de la marque visée.",
+        "Budget, P&L, prix": "Savoir lire le compte de résultat d'un produit : prix de vente, coûts, marge.",
+        "Réglementation produit": "En santé et en agroalimentaire, connaître les mentions obligatoires de l'étiquetage.",
+        "Suite Adobe": "Une prise en main de Photoshop ou Illustrator ; Canva est déjà sur mon CV.",
+        "Power BI": "Rarement demandé : à apprendre sur le poste si besoin.",
+        "SAP": "Rarement demandé : à apprendre sur le poste si besoin.",
+        "RSE, éco-conception": "Avoir un avis sur l'éco-conception d'un produit de la marque visée.",
+        "Google Analytics, GA4": "Rarement demandé : la certification gratuite de Google suffit.",
+        "CRM, Salesforce, HubSpot": "Rarement demandé : à apprendre sur le poste si besoin.",
+        "Word": "Pack Office est sur mon CV : le préciser.",
+    }
+    tout = [x for x in compter(textes_annonces, OUTILS) + compter(textes_annonces, SAVOIRS) if x[1]]
+    atouts = sorted([x for x in tout if x[2] in ("cv", "formation")], key=lambda l: -l[1])[:7]
+    manques = sorted([x for x in tout if x[2] == "non" and x[0] != "Word"], key=lambda l: -l[1])[:6]
+    demandes = [x for x in tout if x[1] >= 5]
+    couv = sum(1 for x in demandes if x[2] != "non")
+    s3 = [retenir(f"Sur les <b>{len(demandes)}</b> compétences citées dans au moins 5 annonces, j'en ai déjà <b>{couv}</b> grâce à mon CV ou à mon M2. "
+                  f"Les recruteurs insistent surtout sur la <b>{e(nq[0][0].lower())}</b> et l'<b>{e(nq[1][0].lower())}</b> : à prouver avec un exemple concret dans chaque lettre." if len(nq) > 1 else ""),
+          f'<div class="grid2"><div class="card atouts"><h3>Mes atouts à mettre en avant</h3><p class="hint">Ce que les annonces demandent et que j\'ai déjà (sur {n_annonces} annonces lues).</p>'
+          f'{barres([(e(n) + " " + badge(k), v) for n, v, k in atouts], maxi=n_annonces)}</div>'
+          f'<div class="card manques"><h3>Ce qui me manque, et comment m\'y préparer</h3><ul class="conseils">'
+          + "".join(f'<li><div><b>{e(n)}</b><span class="n-ann">{v} annonce{"s" if v > 1 else ""}</span></div><p>{e(CONSEILS.get(n, "À préparer avant l entretien."))}</p></li>' for n, v, k in manques)
+          + '</ul></div></div>'
+          f'<div class="card"><h3>Les qualités qu\'on me demandera de prouver</h3><div class="qualites">'
+          + "".join(f'<div><b>{pct(v, len(profils))}</b><span>{e(n)}</span></div>' for n, v in nq)
+          + f'</div><p class="hint">Part des {len(profils)} annonces au profil détaillé qui citent chaque qualité.</p>'
+          + source("Annonces lues en entier", "Mots-clés cherchés dans les missions et le profil (liste dans scripts/site.py)", annonces[-1]["date_veille"] if annonces else "", "Comptage par mots-clés : une annonce qui cite une qualité une fois compte autant qu une annonce qui insiste.", "data/annonces-lues.csv") + "</div>"]
 
     # ---------------- 4. évolution
     moitie = dates_v[len(dates_v) // 2] if dates_v else ""
@@ -425,7 +452,11 @@ def construire():
 
     # ---------------- 5. acteurs
     secteurs = suivi.get("par_secteur", {})
-    lig = [(e(k), sum(v.values())) for k, v in sorted(secteurs.items(), key=lambda kv: -sum(kv[1].values()))]
+    lig = []
+    for k, v in sorted(secteurs.items(), key=lambda kv: -sum(kv[1].values())):
+        envs = sum(n for x, n in v.items() if x != "a_envoyer")
+        reps = v.get("refusee", 0) + v.get("entretien", 0)
+        lig.append((e(k) + (f' <small>{envs} envoyée{"s" if envs > 1 else ""} · {reps} réponse{"s" if reps > 1 else ""}</small>' if envs else ""), sum(v.values())))
     pas_employeur = r"^(stage|alternance|confidentiel|entreprise)$|studi|iscod|openclassrooms|ecole|school|institut|formation|interim|recrutement|cabinet|hays|michael page|robert walters|adecco|randstad|manpower"
     graphies = defaultdict(Counter)
     for r in uniques.values():
@@ -438,7 +469,7 @@ def construire():
                   f"Autour de Clermont, des dizaines d'entreprises fabriquent des produits de marque <b>sans publier d'offre</b> : c'est là que je peux candidater spontanément.")]
     s5.append(f'<div class="grid2"><div class="card"><h3>Les secteurs de mes offres</h3><p class="hint">Secteur des {suivi.get("briefs", 0)} offres que j\'ai retenues pour candidater.</p>{barres(lig)}'
               f'{source("Veille quotidienne et mon tableau de suivi", "Secteur attribué à chaque offre retenue", suivi.get("date_export", ""), "Échantillon choisi pour mon profil : il dit où je candidate autant que qui recrute.", "data/suivi-candidatures.json")}</div>'
-              f'<div class="card"><h3>Les entreprises qui publient le plus</h3><p class="hint">Nombre d\'offres repérées {periode}.</p>{barres([(e(k), v) for k, v in top])}'
+              f'<div class="card"><h3>Les entreprises qui publient le plus</h3><p class="hint">Nombre d\'offres repérées {periode}. Clique sur un nom pour voir ses offres sur la carte.</p>{barres([(f'<button type="button" class="lien-q" data-q="{e(k)}">{e(k)}</button>', v) for k, v in top])}'
               f'{source("Veille quotidienne", "Champ entreprise des offres retenues", v_fin, "Écoles, cabinets et annonces sans employeur retirés ; noms écrits différemment regroupés.", "data/veille-stage-alternance/")}</div></div>')
     if ent:
         pub = {norm(k) for k in rec_ent}
@@ -446,7 +477,9 @@ def construire():
         taille = lambda r: int(re.sub(r"\D", "", r["effectif"].split(" à ")[0].split(" et ")[0]) or 0)
         fab = sorted([r for r in cache if r["famille"] != "Commerce de gros"], key=lambda r: -taille(r))[:10]
         joli_nom = lambda n: re.sub(r"\s*\(.*?\)", "", n).title().replace("Sas", "SAS").replace(" Sa", " SA")
-        cartes = "".join(f'<a class="ent" href="{e(r["fiche"])}"><b>{e(joli_nom(r["nom"]))}</b><span>{e(r["activite"])}</span><small>{e(r["commune"].title())} · {e(r["effectif"])} salariés</small></a>' for r in fab)
+        cartes = "".join(f'<div class="ent"><b>{e(joli_nom(r["nom"]))}</b><span>{e(r["activite"])}</span><small>{e(r["commune"].title())} · {e(r["effectif"])} salariés</small>'
+                         f'<p class="ent-liens"><a href="https://www.google.com/search?q={e(joli_nom(r["nom"]).replace(" ", "+"))}+recrutement+stage" target="_blank" rel="noopener">Page carrière ↗</a>'
+                         f'<a href="{e(r["fiche"])}" target="_blank" rel="noopener">Fiche entreprise ↗</a></p></div>' for r in fab)
         s5.append(f'<div class="card"><h3>Candidatures spontanées près de Clermont</h3>'
                   f'<p class="hint">Dans le Puy-de-Dôme, <b>{len(ent)}</b> entreprises de plus de 20 salariés travaillent dans un secteur qui gère des gammes de produits. '
                   f'<b>{len(cache)}</b> n\'apparaissent dans aucune de mes offres. Voici les plus grands fabricants : des cibles pour une candidature spontanée.</p>'
@@ -459,16 +492,24 @@ def construire():
               + '<p class="hint">Repérés à la main, seulement nom, poste et entreprise, pour ma candidature ; chacun peut demander à être retiré.</p></div>')
 
     # ---------------- 6. actions
+    def entonnoir(suivi, env, rep, st):
+        nb = suivi.get("briefs", 0) or 1
+        etapes = [("Préparées", suivi.get("briefs", 0), "offres retenues, CV et lettre adaptés"), ("Envoyées", env, "candidatures parties"),
+                  ("Réponses", rep, f"{st.get('refusee', 0)} refus, {st.get('entretien', 0)} entretien"), ("Entretiens", st.get("entretien", 0), "décrochés")]
+        h = "".join(f'<div class="et"><div class="et-lab"><b>{v}</b><span>{l}</span></div><div class="et-bar"><span style="width:{max(2, 100 * v / nb):.0f}%"></span></div><small>{n}</small></div>' for l, v, n in etapes)
+        a_env = st.get("a_envoyer", 0)
+        return (f'<div class="grid2"><div class="card"><h3>Mon entonnoir</h3><div class="entonnoir">{h}</div></div>'
+                f'<div class="card"><h3>À faire maintenant</h3><ul class="todo-liste">'
+                f'<li><b>{a_env}</b><span>candidatures prêtes à envoyer</span></li>'
+                f'<li><b>{suivi.get("sans_reponse", 0)}</b><span>relances à faire (sans réponse depuis 7 jours)</span></li>'
+                f'<li><b>{pct(rep, env)}</b><span>de taux de réponse pour l\'instant</span></li></ul></div></div>')
+
     st = suivi.get("statuts", {})
     env = sum(v for k, v in st.items() if k != "a_envoyer")
     rep = st.get("entretien", 0) + st.get("refusee", 0)
     act = contenu.get("actions", {})
-    s6 = [retenir(f"J'ai préparé <b>{suivi.get('briefs', 0)}</b> candidatures et envoyé <b>{env}</b>. Prochaine étape : envoyer les autres avant fin novembre, puis prospecter les entreprises qui ne publient pas."),
-          f'<div class="tiles">'
-          f'<div class="tile"><b>{suivi.get("briefs", 0)}</b><span>offres retenues, avec CV et lettre adaptés</span></div>'
-          f'<div class="tile"><b>{env}</b><span>candidatures envoyées</span></div>'
-          f'<div class="tile"><b>{rep}</b><span>réponses ({st.get("entretien", 0)} entretien, {st.get("refusee", 0)} refus)</span></div>'
-          f'<div class="tile"><b>{pct(rep, env)}</b><span>taux de réponse</span></div></div>'
+    s6 = [retenir(f"J'ai préparé <b>{suivi.get('briefs', 0)}</b> candidatures et envoyé <b>{env}</b>. La priorité : envoyer les <b>{st.get('a_envoyer', 0)}</b> prêtes avant fin novembre, car les stages de janvier se pourvoient maintenant."),
+          entonnoir(suivi, env, rep, st)
           + source("Mon tableau de suivi (privé)", "Statut saisi à la main à chaque envoi, relance ou réponse", suivi.get("date_export", ""), "Le détail par entreprise reste privé ; seuls les totaux sont publiés.", "data/suivi-candidatures.json"),
           '<h3 class="sous">Mes prochaines étapes</h3><ol class="actions">' + "".join(f'<li><time>{e(a["date"])}</time><div><b>{e(a["action"])}</b><p>Preuve : {e(a["preuve"])}</p></div></li>' for a in act.get("liste", [])) + "</ol>"]
 
@@ -518,7 +559,8 @@ def construire():
 </header>
 <nav class="toc"><div class="in">{nav}<a href="#position">Ma stratégie</a></div></nav>
 <main class="in">{corps}
-<section id="position" class="position"><header class="sh"><span class="n">→</span><h2>Ma stratégie {flag(pos)}</h2></header><p>{e(pos.get("texte", ""))}</p></section>
+<section id="position" class="position"><header class="sh"><span class="n">→</span><h2>Ma stratégie {flag(pos)}</h2></header><p>{e(pos.get("intro", ""))}</p>
+<div class="prios">{"".join(f'<div class="prio"><i>Priorité {i}</i><b>{e(x["titre"])}</b><p>{e(x["texte"])}</p></div>' for i, x in enumerate(pos.get("priorites", []), 1))}</div></section>
 </main>
 <footer><div class="in"><p>Les offres sont collectées automatiquement chaque matin (France Travail, Adzuna, La bonne alternance, annuaire des entreprises). Données et méthode : <a href="{DEPOT}">{DEPOT.replace("https://", "")}</a>.</p></div></footer>
 <script src="assets/carte.js"></script>
