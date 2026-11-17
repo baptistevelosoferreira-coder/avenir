@@ -425,3 +425,16 @@ h3.sous { margin: 26px 0 12px; font-size: 22px; color: #fff; text-shadow: 0 2px 
   .bref, .prios { grid-template-columns: 1fr; }
   .et { grid-template-columns: 1fr; }
 }
+
+/* ---------- Onglets ---------- */
+[hidden] { display: none !important; }
+.toc .in { align-items: center; }
+.toc .marque { flex: none; font: 700 14px/1 var(--display); color: #0b2a18; margin-right: 10px; white-space: nowrap; }
+.toc a:last-child { background: none; color: #24513a; }
+.toc a[aria-current="page"], .toc a[aria-current="page"]:hover { background: #1f5c3b; color: #fff; }
+.toc a:focus-visible { outline: 3px solid #1f5c3b; outline-offset: 2px; }
+.onglet { padding: 0; min-height: 60vh; }
+.onglet > .in { padding-top: 36px; padding-bottom: 24px; }
+#accueil .position { padding-top: 24px; }
+.suivant { display: flex; justify-content: flex-end; margin: 32px 0 8px; }
+@media (max-width: 640px) { .toc .marque { display: none; } }

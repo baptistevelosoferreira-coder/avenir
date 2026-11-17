@@ -88,7 +88,8 @@
     b.addEventListener("click", function () {
       q = b.getAttribute("data-q"); if (champ) champ.value = q; maj();
       var vs = parVille(); if (vs.length === 1) { choisie = vs[0].v; dessiner(); liste(); }
-      document.querySelector(".carte").scrollIntoView({ behavior: "smooth", block: "start" });
+      if (location.hash !== "#offres") location.hash = "offres";
+      setTimeout(function () { document.querySelector(".carte").scrollIntoView({ block: "start" }); }, 0);
     });
   });
   dessiner(); liste();

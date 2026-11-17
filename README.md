@@ -2,19 +2,19 @@
 
 Ma recherche de **stage ou d'alternance d'assistant(e) chef de produit**, à partir de janvier 2027. Le site repère chaque matin les offres publiées, les place sur une carte, montre ce que les recruteurs demandent, les entreprises à cibler et où j'en suis.
 
-Page publiée : `index.html` à la racine (GitHub Pages).
+Page publiée : `index.html` à la racine (GitHub Pages). Le site est découpé en onglets (`assets/onglets.js`).
 
 Intitulés suivis : chef de produit, chef de marque, chef de gamme, chef de marché, product manager, brand manager.
 
 ## Ce que contient le site
 
-| Section | Contenu |
+| Onglet | Contenu |
 |---|---|
 | 1. Les offres | Carte cliquable des offres, gratifications, dates de début, mots-clés à taper |
 | 2. Ce que les recruteurs demandent | Compétences et qualités demandées, comparées à mon CV |
 | 3. Où candidater | Secteurs, entreprises qui publient le plus, candidatures spontanées près de Clermont |
 | 4. Où j'en suis | Entonnoir de mes candidatures (totaux), prochaines étapes |
-| Ma stratégie | Mes trois priorités |
+| Accueil | Résumé et ma stratégie (trois priorités) |
 
 Chaque graphique a un bloc « Source » qui donne le canal, la requête exacte, la date et les limites du chiffre, avec un lien vers le fichier de données.
 

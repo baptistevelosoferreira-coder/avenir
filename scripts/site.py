@@ -487,30 +487,41 @@ def construire():
         ("acteurs", "3", "Où candidater", "".join(s5)),
         ("actions", "4", f"Où j'en suis {flag(act)}", "".join(s6)),
     ]
-    nav = "".join(f'<a href="#{i}">{t.split(" <span")[0]}</a>' for i, n, t, _ in sections)
-    corps = "".join(f'<section id="{i}"><header class="sh"><span class="n">{n}</span><h2>{t}</h2></header>{c}</section>' for i, n, t, c in sections)
+    courts = {"offres": "Les offres", "competences": "Les attentes des recruteurs", "acteurs": "Où candidater", "actions": "Où j'en suis"}
+    onglets = [("accueil", "Accueil")] + [(i, courts[i]) for i, *_ in sections]
+    nav = "".join(f'<a href="#{i}" data-onglet="{i}">{t}</a>' for i, t in onglets)
+    def suivant(i):
+        k = [x for x, _ in onglets].index(i)
+        if k + 1 < len(onglets):
+            return f'<p class="suivant"><a class="btn" href="#{onglets[k + 1][0]}">{onglets[k + 1][1]} <span aria-hidden="true">→</span></a></p>'
+        return ""
+    corps = "".join(f'<section id="{i}" class="onglet"><div class="in"><header class="sh"><span class="n">{n}</span><h2>{t}</h2></header>{c}{suivant(i)}</div></section>' for i, n, t, c in sections)
     page = f'''<!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Ma recherche de stage et d'alternance · Baptiste Veloso Ferreira</title>
 <meta name="description" content="Ma recherche de stage et d'alternance d'assistant chef de produit : les offres sur une carte, ce que demandent les recruteurs, les entreprises à cibler et où j'en suis.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="assets/style.css"></head><body>
+<nav class="toc" aria-label="Onglets"><div class="in"><span class="marque">Baptiste · stage &amp; alternance</span>{nav}</div></nav>
+<main>
+<section id="accueil" class="onglet">
 <header class="hero"><div class="in hero-grid"><div class="hero-txt">
 <p class="eyebrow">{e(contenu.get("auteur", ""))} · M2 Marketing opérationnel et digital</p>
 <h1>Ma recherche<br><em>de stage et</em><br><em>d'alternance</em></h1>
 <div class="sep"><span></span><i></i><span></span></div>
 <p class="lead">Assistant chef de produit, à partir de janvier 2027. Ici, toutes les offres que je repère chaque matin, ce que les recruteurs demandent, les entreprises à cibler et où j'en suis.</p>
-<p class="cta"><a class="btn" href="#offres">Voir la carte des offres <span aria-hidden="true">→</span></a><a class="btn ghost" href="#position">Ma stratégie</a></p>
+<p class="cta"><a class="btn" href="#offres">Voir la carte des offres <span aria-hidden="true">→</span></a><a class="btn ghost" href="#actions">Où j\'en suis</a></p>
 <p class="by">Mis à jour le {fr_date(maj)}</p>
 </div><ul class="chips"><li><b>Janvier 2027</b><span>début</span></li><li><b>Stage</b><span>ou alternance</span></li><li><b>2 sem. / 2 sem.</b><span>jusqu'à fin mars</span></li></ul></div>
 <div class="in"><div class="tiles big">{"".join(f'<div class="tile"><b>{v}</b><span>{l}</span></div>' for v, l in hero_tiles)}</div></div>
 </header>
-<nav class="toc"><div class="in">{nav}<a href="#position">Ma stratégie</a></div></nav>
-<main class="in">{corps}
-<section id="position" class="position"><header class="sh"><span class="n">→</span><h2>Ma stratégie {flag(pos)}</h2></header><p>{e(pos.get("intro", ""))}</p>
-<div class="prios">{"".join(f'<div class="prio"><i>Priorité {i}</i><b>{e(x["titre"])}</b><p>{e(x["texte"])}</p></div>' for i, x in enumerate(pos.get("priorites", []), 1))}</div></section>
+<div class="in"><section id="position" class="position"><header class="sh"><span class="n">→</span><h2>Ma stratégie {flag(pos)}</h2></header><p>{e(pos.get("intro", ""))}</p>
+<div class="prios">{"".join(f'<div class="prio"><i>Priorité {i}</i><b>{e(x["titre"])}</b><p>{e(x["texte"])}</p></div>' for i, x in enumerate(pos.get("priorites", []), 1))}</div>{suivant("accueil")}</section></div>
+</section>
+{corps}
 </main>
 <footer><div class="in"><p>Les offres sont collectées automatiquement chaque matin (France Travail, Adzuna, La bonne alternance, annuaire des entreprises). Données et méthode : <a href="{DEPOT}">{DEPOT.replace("https://", "")}</a>.</p></div></footer>
+<script src="assets/onglets.js"></script>
 <script src="assets/carte.js"></script>
 </body></html>'''
     with open(os.path.join(RACINE, "index.html"), "w", encoding="utf-8") as f:
