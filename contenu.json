@@ -18,7 +18,7 @@
     "lancement de produit"
   ],
   "actions": {
-    "a_valider": true,
+    "a_valider": false,
     "liste": [
       {
         "date": "30 novembre 2026",
@@ -33,7 +33,7 @@
     ]
   },
   "position": {
-    "a_valider": true,
+    "a_valider": false,
     "texte": "Le marché du stage de chef de produit existe, mais il est concentré : trois offres localisées sur quatre sont en Île-de-France, et quand l'annonce donne une date, trois sur quatre démarrent en janvier, le plus souvent pour six mois. Ce sont surtout des grands groupes de grande consommation, de distribution et de santé qui publient. Je cherche donc en priorité un stage d'assistant chef de produit en grande consommation ou en santé, à Paris ou à Lyon, à partir de janvier 2027, sans écarter l'alternance. En parallèle, je prospecte le marché caché du Puy-de-Dôme, où des entreprises qui gèrent des gammes de produits recrutent sans publier.",
     "intro": "Le marché du stage de chef de produit est concentré en Île-de-France et démarre en janvier. Je m'organise donc en trois priorités.",
     "priorites": [

@@ -355,7 +355,6 @@ def construire():
     duree6 = sum(1 for a in annonces if "6 mois" in norm(a["duree"]))
     bref = [(pct(n_idf, n_loc), "des offres sont en Île-de-France", f"contre {lyon} à Lyon et {n_clermont} à Clermont"),
             (pct(debuts["Janvier"], dates_ok), "des stages datés commencent en janvier", f"{duree6} annonces sur {n_annonces} durent 6 mois"),
-            (f"{nombre(med)} €" if med else "–", "de gratification médiane par mois", "montant brut affiché dans l'annonce"),
             ("« Assistant chef de produit »", "le mot-clé qui ramène le plus d'offres", "puis « product manager », « brand manager »")]
     s2 = ['<div class="bref">' + "".join(f'<div><b>{v}</b><span>{l}</span><small>{n}</small></div>' for v, l, n in bref) + "</div>"]
     s2.append(carte_html)
@@ -478,7 +477,6 @@ def construire():
     maj = dt.date.today().isoformat()
     hero_tiles = [(nombre(c_stage["valeur"]) if c_stage else "–", "stages « chef de produit » en ligne en France"),
                   (nombre(c_alt["valeur"]) if c_alt else "–", "alternances « chef de produit » en ligne"),
-                  (pct(n_idf, n_loc), "des offres en Île-de-France"),
                   (f"{env} / {suivi.get('briefs', 0)}", "candidatures envoyées sur celles préparées")]
     s3[0] = s3[0].replace("<b>À retenir</b>", "<b>Ce qu'ils cherchent</b>", 1)
     sections = [
