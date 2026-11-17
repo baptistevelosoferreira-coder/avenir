@@ -17,28 +17,6 @@
     "ia générative",
     "lancement de produit"
   ],
-  "intervenants": {
-    "a_valider": true,
-    "liste": [
-      {
-        "nom": "Clément Dos Santos",
-        "date": "24 septembre 2026",
-        "structure": "DBM, agence digitale",
-        "ce_qu_il_a_dit": ""
-      },
-      {
-        "nom": "Samir Aouiche",
-        "date": "14 octobre 2026",
-        "structure": "Laboratoires Théa",
-        "ce_qu_il_a_dit": ""
-      }
-    ]
-  },
-  "professionnels": {
-    "a_valider": true,
-    "regle": "Repérés à la main sur LinkedIn (pas d'aspiration automatique). Seuls le nom, l'intitulé de poste et l'entreprise sont notés, dans le but d'une candidature ; la personne peut demander à être retirée.",
-    "liste": []
-  },
   "actions": {
     "a_valider": true,
     "liste": [
@@ -46,11 +24,6 @@
         "date": "30 novembre 2026",
         "action": "Avoir envoyé une candidature à chaque offre de stage démarrant en janvier repérée par la veille, avec CV et lettre adaptés.",
         "preuve": "Le compteur « candidatures envoyées » de la section Actions, mis à jour à chaque envoi, et les dates d'envoi dans mon tableau de suivi."
-      },
-      {
-        "date": "17 décembre 2026",
-        "action": "Poser à Samir Aouiche (Laboratoires Théa) mes questions sur ce qu'on attend d'un stagiaire chef de produit (rigueur, analyse, panels, IA).",
-        "preuve": "Ses réponses notées dans mon tableau de suivi."
       },
       {
         "date": "15 janvier 2027",
@@ -77,10 +50,5 @@
         "texte": "Les fabricants près de Clermont qui ne publient pas d'offre : je les contacte directement par leur page carrière ou leur service RH."
       }
     ]
-  },
-  "questions_intervenants": [
-    "Mes chiffres montrent que la rigueur et l'analyse reviennent dans la majorité des annonces : comment les évaluez-vous concrètement chez un stagiaire chef de produit ?",
-    "Les panels (Nielsen, IRI, Kantar) apparaissent dans peu d'annonces mais sont absents de ma formation : faut-il les apprendre avant le stage, ou s'apprennent-ils sur le poste ?",
-    "L'APEC classe le chef de produit parmi les métiers où l'IA est le plus citée : quelles tâches de chef de produit l'IA a-t-elle déjà changées dans votre entreprise ?"
-  ]
+  }
 }

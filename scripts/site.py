@@ -216,10 +216,6 @@ SAVOIRS = [("Lancement de produit", r"lancement|lancer", "formation"), ("Étude 
            ("Gestion de projet, agences", r"projet|agence|prestataire", "formation"), ("Budget, P&L, prix", r"budget|p&l|rentabilit|prix|marge", "non"),
            ("Réglementation produit", r"reglement|affaires reglementaires|conformit|normes", "non"),
            ("Anglais", r"anglais|english", "cv"), ("RSE, éco-conception", r"\brse\b|eco-?conception|durable|developpement durable", "non")]
-TENDANCES = [("IA, intelligence artificielle", r"\bia\b|intelligence artificielle|\bai\b|chatgpt|copilot"), ("RSE, durable, éco-conception", r"\brse\b|durable|eco-?conception|impact"),
-             ("Data, analyse de données", r"\bdata\b|donnees|analytics|power ?bi"), ("Digital, social media", r"digital|social|reseaux sociaux|influence"),
-             ("E-commerce, omnicanal", r"e-?commerce|omnicanal|marketplace|amazon"), ("Innovation", r"innovation|innover"),
-             ("International, export", r"international|export|europe|global"), ("Santé, bien-être", r"sante|bien-etre|nutrition|well")]
 
 
 def compter(textes, lexique):
@@ -331,8 +327,6 @@ def construire():
     # ---------------- 1. métier
     variantes = [c for c in comptes if c["canal"] == "Adzuna" and "titre contenant" in c["mesure"]]
     s1 = [retenir("Dans les annonces, mon métier s'appelle surtout <b>assistant(e) chef de produit</b>. C'est le mot-clé à taper sur les sites d'emploi, avec « product manager » et « brand manager » en complément.")]
-    s1.append('<p class="lead">Mon diplôme dit « marketing opérationnel et digital » ; le marché dit <b>chef de produit</b>. Code ROME <b>M1703</b> (Métierscope, France Travail). '
-              'Variantes : chef de marque, chef de gamme, chef de marché, product manager.</p>')
     if variantes:
         joli = lambda v: (v[0].upper() + v[1:]).replace("marche", "marché")
         lignes = [(e(joli(re.search(r"« (.+?) »", c["mesure"]).group(1))), c["valeur"]) for c in variantes]
@@ -341,11 +335,6 @@ def construire():
                   f'<p class="hint">Nombre de stages et d\'alternances en ligne ces 30 derniers jours en France, quand le titre contient ce mot.</p>'
                   f'{barres(sorted(lignes, key=lambda l: -l[1]))}'
                   f'{source("Adzuna (API)", "title_only = <intitulé> · what_or = stage, stagiaire, internship, alternance, alternant, apprentissage, apprenti · max_days_old = 30", c0["date"], c0["limites"] + " « Product manager » mélange marketing et produit numérique.", f"data/{dernier}/comptages.json")}</div>')
-    s1.append('<div class="card"><h3>Mes quatre questions</h3><ol class="qs">'
-              '<li>Quels secteurs recrutent le plus de stagiaires et d\'alternants ? <a href="#acteurs">Réponse</a></li>'
-              '<li>Quelles compétences et quels outils sont demandés ? <a href="#competences">Réponse</a></li>'
-              '<li>Où sont les offres, et quand commencent-elles ? <a href="#offres">Réponse</a></li>'
-              '<li>Quelle gratification est proposée ? <a href="#offres">Réponse</a></li></ol></div>')
 
     # ---------------- 2. offres
     c_stage, c_alt = trouve("Adzuna", "chef de produit : stage"), trouve("Adzuna", "chef de produit : alternance")
@@ -378,7 +367,7 @@ def construire():
                        + (f'<span class="rg" style="left:{X(mn):.1f}%;width:{X(mx) - X(mn):.1f}%"></span><span class="pt" style="left:{X(mx):.1f}%"></span>' if mx else f'<span class="pt" style="left:{X(mn):.1f}%"></span>')
                        + f'</div><div class="val">{nombre(mx or mn)} €</div></div>' for n, mn, mx in sorted(grat, key=lambda g: -(g[2] or g[1])))
         pay = (f'<div class="card"><h3>Combien c\'est payé</h3><div class="gros"><b>{nombre(med)} €</b><span>gratification médiane par mois (brut), sur {len(grat)} annonces de stage qui affichent un montant</span></div>'
-               f'<p class="hint">De {nombre(min(vals))} € à {nombre(max(vals))} €. Le minimum légal est d\'environ 680 € par mois. À titre de repère, un diplômé de l\'IAE gagne 2 433 € brut médian un an après.</p>'
+               f'<p class="hint">De {nombre(min(vals))} € à {nombre(max(vals))} €. Le minimum légal est d\'environ 680 € par mois.</p>'
                f'<details class="plus"><summary>Voir le détail par entreprise</summary><div class="pay">{rows}<div class="payrow"><div></div><div class="axis"><span>600 €</span><span>1 400 €</span><span>2 200 €</span></div><div></div></div></div></details>'
                f'<p class="warn">C\'est le montant écrit dans l\'annonce, pas un salaire constaté. Beaucoup d\'annonces ne l\'indiquent pas.</p>'
                f'{source("Annonces lues en entier", "Champ « rémunération » des annonces retenues, converti en brut mensuel (horaire × 151,67 ; annuel ÷ 12)", annonces[-1]["date_veille"] if annonces else "", "Petit échantillon, choisi pour mon profil ; les annonces sans montant sont exclues.", "data/annonces-lues.csv")}</div>')
@@ -426,30 +415,6 @@ def construire():
           + f'</div><p class="hint">Part des {len(profils)} annonces au profil détaillé qui citent chaque qualité.</p>'
           + source("Annonces lues en entier", "Mots-clés cherchés dans les missions et le profil (liste dans scripts/site.py)", annonces[-1]["date_veille"] if annonces else "", "Comptage par mots-clés : une annonce qui cite une qualité une fois compte autant qu une annonce qui insiste.", "data/annonces-lues.csv") + "</div>"]
 
-    # ---------------- 4. évolution
-    moitie = dates_v[len(dates_v) // 2] if dates_v else ""
-    debut_t = [norm(r["intitule"] + " " + r["description_extrait"]) for r in retenues_toutes if r["_jour"] < moitie]
-    fin_t = [norm(r["intitule"] + " " + r["description_extrait"]) for r in retenues_toutes if r["_jour"] >= moitie]
-    tend = []
-    for nom, motif in TENDANCES:
-        a = 100 * sum(1 for t in debut_t if re.search(motif, t)) / max(1, len(debut_t))
-        b = 100 * sum(1 for t in fin_t if re.search(motif, t)) / max(1, len(fin_t))
-        tend.append((nom, a, b))
-    tend.sort(key=lambda t: -(t[2] - t[1]))
-    trows = "".join(f'<tr><td>{e(n)}</td><td class="num">{a:.0f} %</td><td class="num">{b:.0f} %</td></tr>' for n, a, b in tend[:4])
-    inter = contenu.get("intervenants", {})
-    items = "".join(f'<li><b>{e(p["nom"])}</b> ({e(p["structure"])}) : ' + (e(p["ce_qu_il_a_dit"]) if p.get("ce_qu_il_a_dit") else '<span class="todo">à compléter</span>') + "</li>" for p in inter.get("liste", []))
-    qs = "".join(f"<li>{e(q)}</li>" for q in contenu.get("questions_intervenants", []))
-    s4 = [retenir("Le métier se tourne vers l'<b>IA</b> et la <b>donnée</b> : l'APEC classe le chef de produit parmi les métiers marketing où l'IA est le plus citée. "
-                  "Dans mes annonces, la <b>santé</b> et la <b>RSE</b> progressent, mais deux semaines de veille, c'est encore court pour parler de tendance."),
-          '<div class="grid2"><div class="card"><h3>Ce que disent les études</h3><ul class="facts">'
-          '<li><b>APEC, mars 2026</b> : le chef de produit est l\'un des trois métiers commercial-marketing où l\'IA est le plus souvent citée dans les offres cadres. <a href="https://www.apec.fr/tendances-emploi-cadre/evolution-des-metiers-et-competences/quel-impact-de-l-ia-sur-les-competences-des-metiers-du-commercial-et-du-marketing-.html">Source</a></li>'
-          '<li><b>WEF, Future of Jobs 2025</b> : « IA et big data » est la compétence qui progresse le plus d\'ici 2030 ; 39 % des compétences clés vont changer. <a href="https://reports.weforum.org/docs/WEF_Future_of_Jobs_Report_2025.pdf">Source</a></li></ul></div>'
-          f'<div class="card"><h3>Les thèmes qui montent dans mes annonces</h3><p class="hint">Part des offres qui citent le thème, {fr_date(v_debut, False)} – {fr_date(moitie, False)} puis {fr_date(moitie, False)} – {fr_date(v_fin, False)}.</p>'
-          f'<div class="tablebox"><table><thead><tr><th>Thème</th><th class="num">Avant</th><th class="num">Après</th></tr></thead><tbody>{trows}</tbody></table></div>'
-          f'{source("Veille quotidienne", "Mots-clés dans le titre et l extrait de chaque offre retenue", v_fin, "Deux semaines et des extraits courts : un écart de quelques points n est pas une tendance.", "data/veille-stage-alternance/")}</div></div>'
-          f'<div class="card"><h3>Ce qu\'en disent les professionnels</h3><ul class="facts">{items}</ul><h4>Mes questions pour eux</h4><ol class="qs">{qs}</ol></div>']
-
     # ---------------- 5. acteurs
     secteurs = suivi.get("par_secteur", {})
     lig = []
@@ -485,11 +450,6 @@ def construire():
                   f'<b>{len(cache)}</b> n\'apparaissent dans aucune de mes offres. Voici les plus grands fabricants : des cibles pour une candidature spontanée.</p>'
                   f'<div class="ents">{cartes}</div>'
                   f'{source("API Recherche d entreprises (data.gouv)", ent_meta.get("requete", {}), ent_meta.get("date", ""), ent_meta.get("limites", ""), "data/entreprises_63.csv")}</div>')
-    pro = contenu.get("professionnels", {})
-    pl = "".join(f'<li><b>{e(p.get("nom"))}</b>, {e(p.get("poste"))}, {e(p.get("entreprise"))}</li>' for p in pro.get("liste", []))
-    s5.append(f'<div class="card"><h3>Des chefs de produit à contacter</h3>'
-              + (f'<ul class="facts">{pl}</ul>' if pl else '<p class="todo">À compléter : trois chefs de produit repérés sur LinkedIn, dans les entreprises qui recrutent le plus.</p>')
-              + '<p class="hint">Repérés à la main, seulement nom, poste et entreprise, pour ma candidature ; chacun peut demander à être retiré.</p></div>')
 
     # ---------------- 6. actions
     def entonnoir(suivi, env, rep, st):
@@ -511,19 +471,7 @@ def construire():
     s6 = [retenir(f"J'ai préparé <b>{suivi.get('briefs', 0)}</b> candidatures et envoyé <b>{env}</b>. La priorité : envoyer les <b>{st.get('a_envoyer', 0)}</b> prêtes avant fin novembre, car les stages de janvier se pourvoient maintenant."),
           entonnoir(suivi, env, rep, st)
           + source("Mon tableau de suivi (privé)", "Statut saisi à la main à chaque envoi, relance ou réponse", suivi.get("date_export", ""), "Le détail par entreprise reste privé ; seuls les totaux sont publiés.", "data/suivi-candidatures.json"),
-          '<h3 class="sous">Mes prochaines étapes</h3><ol class="actions">' + "".join(f'<li><time>{e(a["date"])}</time><div><b>{e(a["action"])}</b><p>Preuve : {e(a["preuve"])}</p></div></li>' for a in act.get("liste", [])) + "</ol>"]
-
-    # ---------------- 7. fabrication
-    nb_csv = sum(1 for f in glob.glob(os.path.join(DATA, "**", "*.csv"), recursive=True))
-    s7 = f'''<div class="card"><h3>La méthode : d'où viennent les chiffres</h3>
-<p>Chaque matin vers 6 h 40, un robot GitHub (<a href="{DEPOT}/blob/main/.github/workflows/veille.yml">veille.yml</a>) interroge des sources officielles et gratuites, enregistre des fichiers datés, puis réécrit cette page. À ce jour : {len(jours) + len(dates_v)} extractions et {nb_csv} fichiers dans <a href="{DEPOT}/tree/main/data">data/</a>.</p>
-<ul class="canaux"><li><b>France Travail</b> offres du code ROME M1703</li><li><b>Adzuna</b> comptages et offres</li><li><b>La bonne alternance</b> alternances et entreprises qui recrutent</li><li><b>Recherche d'entreprises</b> base du Puy-de-Dôme</li></ul>
-<details class="plus"><summary>Le détail technique et ma règle RGPD</summary>
-<ol class="steps"><li><a href="{DEPOT}/blob/main/scripts/collecte.py">collecte.py</a> interroge les API et écrit <code>data/AAAA-MM-JJ/</code>, avec un <code>comptages.json</code> qui garde la requête de chaque chiffre.</li>
-<li><a href="{DEPOT}/blob/main/scripts/entreprises.py">entreprises.py</a> met à jour la base des entreprises du 63.</li>
-<li><a href="{DEPOT}/blob/main/scripts/site.py">site.py</a> relit les données et réécrit cette page ; l'historique Git sert d'archive.</li></ol>
-<p class="hint">Pas d'aspiration de LinkedIn, de l'APEC ni d'Indeed (leurs conditions l'interdisent). Les clés d'API sont dans les secrets du dépôt, jamais dans le code.</p>
-<p class="hint"><b>RGPD :</b> le dépôt est public, donc la base d'entreprises ne contient aucun nom de personne. Les professionnels sont notés pour une seule finalité, ma candidature, avec leur seul nom, poste et entreprise, et peuvent demander à être retirés. Le détail de mes candidatures reste privé.</p></details></div>'''
+          '<h3 class="sous">Mes prochaines étapes</h3><ol class="actions">' + "".join(f'<li><time>{e(a["date"])}</time><div><b>{e(a["action"])}</b></div></li>' for a in act.get("liste", [])) + "</ol>"]
 
     # ---------------- page
     pos = contenu.get("position", {})
@@ -534,7 +482,7 @@ def construire():
                   (f"{env} / {suivi.get('briefs', 0)}", "candidatures envoyées sur celles préparées")]
     s3[0] = s3[0].replace("<b>À retenir</b>", "<b>Ce qu'ils cherchent</b>", 1)
     sections = [
-        ("offres", "1", "Les offres", "".join(s2) + "".join(s1[2:3])),
+        ("offres", "1", "Les offres", "".join(s2) + "".join(s1[1:])),
         ("competences", "2", "Ce que les recruteurs demandent", "".join(s3)),
         ("acteurs", "3", "Où candidater", "".join(s5)),
         ("actions", "4", f"Où j'en suis {flag(act)}", "".join(s6)),

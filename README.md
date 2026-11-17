@@ -1,35 +1,20 @@
 # Chef de produit, le marché compté
 
-Site de Baptiste Veloso Ferreira pour le séminaire métiers du M2 Marketing opérationnel et digital (IAE Clermont Auvergne).
-Il compte le marché des **stages et alternances de chef de produit** à partir des offres publiées, chaque matin, et dit ce que j'en conclus pour ma propre recherche (stage de fin d'études à partir de janvier 2027, ou alternance).
+Ma recherche de **stage ou d'alternance d'assistant(e) chef de produit**, à partir de janvier 2027. Le site repère chaque matin les offres publiées, les place sur une carte, montre ce que les recruteurs demandent, les entreprises à cibler et où j'en suis.
 
 Page publiée : `index.html` à la racine (GitHub Pages).
 
-## Le métier
-
-- Intitulé visé : **assistant(e) chef de produit** (stage ou alternance).
-- Code ROME : **M1703**, Management et gestion de produit (Métierscope, France Travail).
-- Variantes suivies : chef de produit, chef de marque, chef de gamme, chef de marché, product manager, brand manager.
-
-## Les questions posées au marché
-
-1. Quels secteurs recrutent le plus de stagiaires et d'alternants chefs de produit ?
-2. Quelles compétences et quels outils reviennent le plus dans les offres ?
-3. Où se concentrent les offres, et quand les entreprises recrutent-elles ?
-4. Quelle gratification et quel rythme sont proposés ?
+Intitulés suivis : chef de produit, chef de marque, chef de gamme, chef de marché, product manager, brand manager.
 
 ## Ce que contient le site
 
 | Section | Contenu |
 |---|---|
-| 1. Le métier | Nombre d'offres par intitulé, intitulés réellement employés |
-| 2. Les offres | Volume jour après jour, carte, régions, Clermont et alentours, gratifications affichées, dates de début |
-| 3. Compétences | Qualités, logiciels et savoir-faire demandés, comparés à ma formation et à mon CV |
-| 4. Évolution | Thèmes qui montent dans les annonces, APEC et WEF, avis des intervenants, mes questions |
-| 5. Acteurs | Secteurs, entreprises qui publient, marché caché du Puy-de-Dôme, recruteurs en alternance sans offre, professionnels |
-| 6. Actions | Où en sont mes candidatures (totaux), trois actions datées avec leur preuve |
-| 7. Fabrication | Canaux, chaîne automatique, règle RGPD |
-| Ma position | Ce que je décide à partir des chiffres |
+| 1. Les offres | Carte cliquable des offres, gratifications, dates de début, mots-clés à taper |
+| 2. Ce que les recruteurs demandent | Compétences et qualités demandées, comparées à mon CV |
+| 3. Où candidater | Secteurs, entreprises qui publient le plus, candidatures spontanées près de Clermont |
+| 4. Où j'en suis | Entonnoir de mes candidatures (totaux), prochaines étapes |
+| Ma stratégie | Mes trois priorités |
 
 Chaque graphique a un bloc « Source » qui donne le canal, la requête exacte, la date et les limites du chiffre, avec un lien vers le fichier de données.
 
@@ -51,7 +36,7 @@ Pas d'aspiration de LinkedIn, de l'APEC ni d'Indeed : leurs conditions d'utilisa
 scripts/collecte.py       interroge France Travail, Adzuna, La bonne alternance
 scripts/entreprises.py    base des entreprises du 63 (API Recherche d'entreprises)
 scripts/site.py           relit data/ et contenu.json, écrit index.html
-contenu.json              textes écrits à la main (intervenants, actions, position)
+contenu.json              textes écrits à la main (prochaines étapes, stratégie)
 assets/style.css          mise en page
 data/AAAA-MM-JJ/          une extraction datée : CSV des offres, comptages.json (requête de chaque chiffre)
 data/veille-stage-alternance/   veille quotidienne du 5 au 17 novembre 2026 (une ligne par offre retenue)
@@ -84,4 +69,4 @@ Ou depuis GitHub : onglet **Actions → Veille du métier → Run workflow**.
 ## RGPD
 
 Le dépôt est public. Il ne contient ni CV, ni lettre, ni coordonnées, ni le détail de mes candidatures entreprise par entreprise : seulement des totaux.
-La base d'entreprises ne contient aucun nom de personne. Les professionnels notés à la main (section Acteurs) le sont pour une seule finalité, ma candidature, avec leur seul nom, poste et entreprise ; toute personne peut demander à être retirée.
+La base d'entreprises ne contient aucun nom de personne.
