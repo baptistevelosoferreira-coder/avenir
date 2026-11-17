@@ -95,39 +95,6 @@ def barres(lignes, maxi=None, unite="", classe=""):
     return f'<div class="hbars {classe}">' + "".join(out) + "</div>"
 
 
-# ------------------------------------------------------------------ décor
-
-FEUILLE = ('<svg class="leaf" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19C5 10 11 5 20 4c0 9-5 15-14 15z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>'
-           '<path d="M5 19 14 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>')
-
-
-def _plante():
-    """Plante stylisée dessinée en SVG (aucune image externe)."""
-    feuille = "M0 0C30-46 104-54 150-6C104 40 30 38 0 0Z"
-    tiges = [(-160, 130, 1), (-20, 130, 1), (-140, 150, 0), (-40, 150, 0), (-118, 170, 1), (-62, 170, 1),
-             (-100, 150, 2), (-80, 160, 0), (-130, 105, 2), (-50, 105, 2), (-90, 120, 2)]
-    out = ['<svg class="plante" viewBox="0 0 360 440" role="img" aria-label="Plante en pot"><defs>'
-           '<linearGradient id="fA" x1="0" x2="1"><stop offset="0" stop-color="#2f7a4c"/><stop offset="1" stop-color="#8fd19a"/></linearGradient>'
-           '<linearGradient id="fB" x1="0" x2="1"><stop offset="0" stop-color="#1e5a37"/><stop offset="1" stop-color="#5fb377"/></linearGradient>'
-           '<linearGradient id="fC" x1="0" x2="1"><stop offset="0" stop-color="#3d8f5a"/><stop offset="1" stop-color="#c6efc9"/></linearGradient>'
-           '<linearGradient id="pot" x1="0" x2="1"><stop offset="0" stop-color="#0f3b25"/><stop offset=".55" stop-color="#1d5a3a"/><stop offset="1" stop-color="#0c2f1d"/></linearGradient>'
-           '<radialGradient id="halo"><stop offset="0" stop-color="#bff0c6" stop-opacity=".35"/><stop offset="1" stop-color="#bff0c6" stop-opacity="0"/></radialGradient></defs>'
-           '<ellipse cx="180" cy="190" rx="175" ry="175" fill="url(#halo)"/>'
-           '<ellipse cx="180" cy="418" rx="120" ry="14" fill="#000" opacity=".28"/>']
-    for ang, lg, t in tiges:
-        sc = lg / 150
-        out.append(f'<g transform="translate(180 300) rotate({ang}) scale({sc:.2f})"><path d="{feuille}" fill="url(#f{"ABC"[t]})"/>'
-                   f'<path d="M4 0C50-6 100-8 146-4" fill="none" stroke="#e9fbe9" stroke-opacity=".45" stroke-width="2"/></g>')
-    out.append('<path d="M180 300 L170 230 M180 300 L196 214 M180 300 L150 250" stroke="#2c6b44" stroke-width="4" fill="none" stroke-linecap="round"/>')
-    out.append('<path d="M108 300h144l-18 112a12 12 0 0 1-12 10h-84a12 12 0 0 1-12-10z" fill="url(#pot)"/>'
-               '<rect x="100" y="292" width="160" height="20" rx="8" fill="#1f5c3b"/>'
-               '<path d="M120 318c4 30 8 60 12 92" stroke="#fff" stroke-opacity=".12" stroke-width="6" stroke-linecap="round" fill="none"/></svg>')
-    return "".join(out)
-
-
-PLANTE = _plante()
-
-
 # ------------------------------------------------------------------ lieux
 
 IDF = r"paris|la defense|puteaux|boulogne|issy|neuilly|rueil|levallois|courbevoie|nanterre|saint-ouen|saint-denis|montreuil|ivry|charenton|rungis|velizy|guyancourt|versailles|massy|clichy|seine-saint-denis|hauts-de-seine|val-de-marne|yvelines|essonne|val-d'oise|seine-et-marne|ile-de-france|villejuif|saint-cloud|suresnes|clamart|meudon|montrouge|vincennes|noisy|cergy|evry|saclay|roissy|creteil|pantin|aubervilliers|gennevilliers|asnieres|colombes|saint-germain-en-laye|antony|\((75|77|78|91|92|93|94|95)\)|\b(75|77|78|91|92|93|94|95)\d{3}\b"
@@ -639,16 +606,16 @@ def construire():
 <header class="hero"><div class="in hero-grid"><div class="hero-txt">
 <p class="eyebrow">Séminaires métiers · {e(contenu.get("formation", ""))}</p>
 <h1>Chef de produit<br><em>le marché</em><br><em>compté</em></h1>
-<div class="sep"><span></span>{FEUILLE}<span></span></div>
+<div class="sep"><span></span><i></i><span></span></div>
 <p class="lead">Je cherche un {e(contenu.get("recherche", ""))[0].lower() + e(contenu.get("recherche", ""))[1:]} Ce site compte ce marché à partir des offres, chaque matin.</p>
 <p class="cta"><a class="btn" href="#offres">Voir les chiffres <span aria-hidden="true">→</span></a><a class="btn ghost" href="#position">Ma position</a></p>
 <p class="by">{e(contenu.get("auteur", ""))} · mis à jour le {fr_date(maj)}</p>
-</div><div class="hero-art">{PLANTE}<ul class="chips"><li>{FEUILLE}<span>Données<br>datées</span></li><li>{FEUILLE}<span>Sources<br>citées</span></li><li>{FEUILLE}<span>Mise à jour<br>chaque matin</span></li></ul></div></div>
+</div><ul class="chips"><li><b>Données</b><span>datées</span></li><li><b>Sources</b><span>citées</span></li><li><b>Mise à jour</b><span>chaque matin</span></li></ul></div>
 <div class="in"><div class="tiles big">{"".join(f'<div class="tile"><b>{v}</b><span>{l}</span></div>' for v, l in hero_tiles)}</div></div>
 </header>
 <nav class="toc"><div class="in">{nav}<a href="#position">Ma position</a></div></nav>
 <main class="in">{corps}
-<section id="position" class="position"><header class="sh"><span class="n">{FEUILLE}</span><h2>Ma position {flag(pos)}</h2></header><p>{e(pos.get("texte", ""))}</p></section>
+<section id="position" class="position"><header class="sh"><span class="n">→</span><h2>Ma position {flag(pos)}</h2></header><p>{e(pos.get("texte", ""))}</p></section>
 </main>
 <footer><div class="in"><p>Données et scripts : <a href="{DEPOT}">{DEPOT.replace("https://", "")}</a>. Chaque chiffre indique sa source ; cliquer sur « Source » pour voir la requête, la date et les limites.</p></div></footer>
 </body></html>'''
