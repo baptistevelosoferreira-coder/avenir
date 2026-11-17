@@ -438,3 +438,24 @@ h3.sous { margin: 26px 0 12px; font-size: 22px; color: #fff; text-shadow: 0 2px 
 #accueil .position { padding-top: 24px; }
 .suivant { display: flex; justify-content: flex-end; margin: 32px 0 8px; }
 @media (max-width: 640px) { .toc .marque { display: none; } }
+
+/* ---------- Finition : bandeau d'accueil compact, sources en bas ---------- */
+.hero { padding: 26px 0 18px; }
+.hero h1 { font-size: clamp(28px, 4vw, 42px); line-height: 1.05; }
+.hero h1 br { display: none; }
+.hero h1 em { margin-left: .25em; }
+.hero h1 em + br + em { margin-left: .25em; }
+.hero .sep { display: none; }
+.hero .lead { font-size: 16px; margin: 10px 0 14px; }
+.hero .cta { margin: 0; }
+.hero .by { margin-top: 8px; }
+.chips { display: flex; padding: 4px; border-radius: 18px; }
+.chips li { padding: 10px 16px; }
+.tiles.big { margin-top: 18px; }
+.tiles.big .tile b { font-size: 28px; }
+footer .sources { margin: 0 0 14px; color: rgba(255, 255, 255, .92); }
+footer .sources summary { cursor: pointer; font-weight: 600; }
+footer .sources ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 8px; font-size: 13px; }
+footer .sources span { opacity: .85; }
+footer .sources a { color: #fff; }
+@media (max-width: 760px) { .chips { justify-self: start; } }

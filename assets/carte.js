@@ -67,7 +67,7 @@
     } else {
       var max = vs.length ? vs[0].l.length : 1;
       if (!tot) { panneau.innerHTML = '<div class="p-tete"><h4>Aucune offre</h4><p>Aucune offre ne correspond. Essaie un autre mot ou décoche le filtre.</p></div>'; return; }
-      panneau.innerHTML = '<div class="p-tete"><h4>' + tot + " offre" + (tot > 1 ? "s" : "") + (filtre !== "Tous" ? " (" + filtre.toLowerCase() + "s)" : "") + '</h4><p>Choisis une ville sur la carte ou dans la liste.</p></div><ul class="villes">' +
+      panneau.innerHTML = '<div class="p-tete"><h4>' + tot + " offre" + (tot > 1 ? "s" : "") + (filtre !== "Tous" ? " (" + filtre.toLowerCase() + "s)" : "") + '</h4><p>Choisir une ville sur la carte ou dans la liste.</p></div><ul class="villes">' +
         vs.map(function (c) { return '<li><button type="button" data-v="' + esc(c.v) + '"><span>' + esc(c.v) + '</span><i style="width:' + (100 * c.l.length / max).toFixed(0) + '%"></i><b>' + c.l.length + "</b></button></li>"; }).join("") + "</ul>";
       Array.prototype.forEach.call(panneau.querySelectorAll("[data-v]"), function (b) {
         b.addEventListener("click", function () { choisie = b.getAttribute("data-v"); dessiner(); liste(); });
