@@ -459,3 +459,17 @@ footer .sources ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 8
 footer .sources span { opacity: .85; }
 footer .sources a { color: #fff; }
 @media (max-width: 760px) { .chips { justify-self: start; } }
+
+/* ---------- Vert sapin ---------- */
+html { background: #123d2b; }
+body {
+  background:
+    radial-gradient(1100px 700px at 85% -5%, rgba(120, 190, 140, .18), transparent 60%),
+    radial-gradient(900px 600px at -10% 30%, rgba(70, 140, 100, .22), transparent 60%),
+    linear-gradient(180deg, #0f3a28 0%, #154832 50%, #1a5239 100%);
+  background-attachment: fixed;
+}
+.toc { background: rgba(255, 255, 255, .92); }
+.tiles.big .tile { background: rgba(255, 255, 255, .12); border-color: rgba(255, 255, 255, .28); }
+.chips { background: rgba(255, 255, 255, .1); border-color: rgba(255, 255, 255, .28); }
+footer { border-top-color: rgba(255, 255, 255, .15); }
