@@ -7,9 +7,6 @@ on:
   schedule:
     - cron: "40 5 * * *"   # vers 6 h 40 (heure de Paris, hiver)
   workflow_dispatch: {}
-  push:
-    branches: ["claude/**"]
-    paths: ["scripts/**", ".github/workflows/veille.yml"]
 
 permissions:
   contents: write
@@ -34,7 +31,12 @@ jobs:
           ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
           ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
           LBA_TOKEN: ${{ secrets.LBA_TOKEN }}
-        run: python scripts/collecte.py
+        run: |
+          if [ -z "$ADZUNA_APP_ID" ] && [ -z "$FT_CLIENT_ID" ]; then
+            echo "Aucune clé d'API dans les secrets du dépôt : collecte sautée, site reconstruit avec les données existantes."
+          else
+            python scripts/collecte.py
+          fi
       - name: Mettre à jour la base d'entreprises du 63
         run: python scripts/entreprises.py || echo "API Recherche d'entreprises indisponible"
       - name: Reconstruire le site
@@ -43,7 +45,8 @@ jobs:
         run: |
           git config user.name "veille-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data index.html
+          git add data
+          git add index.html assets 2>/dev/null || true
           git diff --cached --quiet || git commit -m "Veille du $(date +%F)"
           git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
           git push origin "HEAD:${GITHUB_REF_NAME}"

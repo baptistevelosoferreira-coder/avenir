@@ -38,6 +38,8 @@ journal = []
 
 
 def log(msg):
+    # le journal est publié : on retire toute clé d'API des URL d'erreur
+    msg = re.sub(r"(app_id|app_key|token|client_secret|client_id)=[^&\s]+", r"\1=***", str(msg))
     print(msg)
     journal.append(msg)
 
@@ -154,10 +156,10 @@ def adzuna():
     # 4. Statistiques Adzuna (mot-clé, pas seulement le titre)
     os.makedirs(SORTIE, exist_ok=True)
     stats = {}
-    for nom, chemin, p in [("geodata", "geodata", {"what_phrase": INTITULE, "what_or": STAGE_ALT, "location0": "France"}),
-                           ("histogramme_salaires", "histogram", {"what_phrase": INTITULE, "what_or": STAGE_ALT}),
-                           ("historique_salaires", "history", {"what_phrase": INTITULE, "months": 12}),
-                           ("top_entreprises", "top_companies", {"what_phrase": INTITULE, "what_or": STAGE_ALT})]:
+    for nom, chemin, p in [("geodata", "geodata", {"what": "chef produit stage", "location0": "France"}),
+                           ("histogramme_salaires", "histogram", {"what": "chef produit stage"}),
+                           ("historique_salaires", "history", {"category": "pr-advertising-marketing-jobs", "months": 12}),
+                           ("top_entreprises", "top_companies", {"what": "chef produit stage"})]:
         try:
             stats[nom] = {"requete": {"endpoint": chemin, **p}, "date": AUJ, "donnees": get(chemin, **p)}
         except Exception as ex:
