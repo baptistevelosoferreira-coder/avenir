@@ -483,3 +483,26 @@ h1, h2, h3, .hero h1, .sh h2, .mc-auj h2, .mc-tiroir h3 { font-family: var(--tit
 .card h3, .mc-etapes h3 { font-weight: 700; }
 .mc-col h3 { font-family: var(--sans); }
 .chips b { text-transform: none; }
+
+/* ---------- Lampe à lave en fond ---------- */
+body > .lave { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; filter: blur(38px) saturate(130%); opacity: .9; mix-blend-mode: screen; }
+.lave i { position: absolute; display: block; border-radius: 50%; will-change: transform, border-radius; animation: lave-monte 26s ease-in-out infinite alternate, lave-forme 11s ease-in-out infinite alternate; }
+.lave i:nth-child(1) { width: 42vmax; height: 42vmax; left: -8vmax; top: 55%; background: radial-gradient(circle at 35% 35%, #4fc489, #1f7a4f 70%); animation-duration: 18s, 9s; }
+.lave i:nth-child(2) { width: 34vmax; height: 34vmax; right: -6vmax; top: 10%; background: radial-gradient(circle at 40% 40%, #7fd6a8, #2f8f62 70%); animation-duration: 21s, 8s; animation-delay: -8s, -3s; }
+.lave i:nth-child(3) { width: 26vmax; height: 26vmax; left: 30%; top: 75%; background: radial-gradient(circle at 40% 40%, #3fb3a8, #1d6e66 70%); animation-duration: 16s, 7s; animation-delay: -14s, -5s; }
+.lave i:nth-child(4) { width: 22vmax; height: 22vmax; left: 55%; top: 35%; background: radial-gradient(circle at 40% 40%, #a8e6bf, #3f9a6c 70%); opacity: .7; animation-duration: 23s, 10s; animation-delay: -20s, -7s; }
+.lave i:nth-child(5) { width: 30vmax; height: 30vmax; left: 8%; top: -10%; background: radial-gradient(circle at 40% 40%, #3aa572, #1b5e40 70%); animation-duration: 20s, 11s; animation-delay: -4s, -2s; }
+.lave i:nth-child(6) { width: 18vmax; height: 18vmax; right: 18%; top: 80%; background: radial-gradient(circle at 40% 40%, #c4f0d3, #4aa877 70%); opacity: .6; animation-duration: 15s, 6s; animation-delay: -11s, -4s; }
+@keyframes lave-monte {
+  0%   { transform: translate(0, 0) scale(1); }
+  33%  { transform: translate(6vw, -28vh) scale(1.12); }
+  66%  { transform: translate(-5vw, -48vh) scale(.92); }
+  100% { transform: translate(3vw, -62vh) scale(1.05); }
+}
+@keyframes lave-forme {
+  0%   { border-radius: 50% 50% 50% 50% / 50% 50% 50% 50%; }
+  50%  { border-radius: 62% 38% 55% 45% / 45% 60% 40% 55%; }
+  100% { border-radius: 40% 60% 42% 58% / 60% 42% 58% 40%; }
+}
+@media (prefers-reduced-motion: reduce) { .lave i { animation: none; } }
+@media (max-width: 700px) { body > .lave { filter: blur(28px); opacity: .75; } }
