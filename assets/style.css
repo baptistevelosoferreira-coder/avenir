@@ -370,3 +370,4 @@ details.plus[open] summary { margin-bottom: 10px; }
   .grid3, .carte-corps { grid-template-columns: 1fr; }
   .panneau { max-height: 380px; }
 }
+h3.sous { margin: 26px 0 12px; font-size: 22px; color: #fff; text-shadow: 0 2px 14px rgba(10, 50, 28, .25); }

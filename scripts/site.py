@@ -335,8 +335,8 @@ def construire():
         joli = lambda v: (v[0].upper() + v[1:]).replace("marche", "marché")
         lignes = [(e(joli(re.search(r"« (.+?) »", c["mesure"]).group(1))), c["valeur"]) for c in variantes]
         c0 = variantes[0]
-        s1.append(f'<div class="card"><h3>Combien d\'offres de stage ou d\'alternance pour chaque intitulé</h3>'
-                  f'<p class="hint">Offres en ligne ces 30 derniers jours en France, quand le titre contient ce mot.</p>'
+        s1.append(f'<div class="card"><h3>Quels mots-clés taper dans les moteurs de recherche</h3>'
+                  f'<p class="hint">Nombre de stages et d\'alternances en ligne ces 30 derniers jours en France, quand le titre contient ce mot.</p>'
                   f'{barres(sorted(lignes, key=lambda l: -l[1]))}'
                   f'{source("Adzuna (API)", "title_only = <intitulé> · what_or = stage, stagiaire, internship, alternance, alternant, apprentissage, apprenti · max_days_old = 30", c0["date"], c0["limites"] + " « Product manager » mélange marketing et produit numérique.", f"data/{dernier}/comptages.json")}</div>')
     s1.append('<div class="card"><h3>Mes quatre questions</h3><ol class="qs">'
@@ -436,7 +436,7 @@ def construire():
     top = rec_ent.most_common(10)
     s5 = [retenir(f"L'<b>agroalimentaire</b> et la <b>santé</b> recrutent le plus de stagiaires dans mes offres ; la distribution (Cdiscount, Monoprix) publie beaucoup. "
                   f"Autour de Clermont, des dizaines d'entreprises fabriquent des produits de marque <b>sans publier d'offre</b> : c'est là que je peux candidater spontanément.")]
-    s5.append(f'<div class="grid2"><div class="card"><h3>Les secteurs</h3><p class="hint">Secteur des {suivi.get("briefs", 0)} offres que j\'ai retenues pour candidater.</p>{barres(lig)}'
+    s5.append(f'<div class="grid2"><div class="card"><h3>Les secteurs de mes offres</h3><p class="hint">Secteur des {suivi.get("briefs", 0)} offres que j\'ai retenues pour candidater.</p>{barres(lig)}'
               f'{source("Veille quotidienne et mon tableau de suivi", "Secteur attribué à chaque offre retenue", suivi.get("date_export", ""), "Échantillon choisi pour mon profil : il dit où je candidate autant que qui recrute.", "data/suivi-candidatures.json")}</div>'
               f'<div class="card"><h3>Les entreprises qui publient le plus</h3><p class="hint">Nombre d\'offres repérées {periode}.</p>{barres([(e(k), v) for k, v in top])}'
               f'{source("Veille quotidienne", "Champ entreprise des offres retenues", v_fin, "Écoles, cabinets et annonces sans employeur retirés ; noms écrits différemment regroupés.", "data/veille-stage-alternance/")}</div></div>')
@@ -447,15 +447,15 @@ def construire():
         fab = sorted([r for r in cache if r["famille"] != "Commerce de gros"], key=lambda r: -taille(r))[:10]
         joli_nom = lambda n: re.sub(r"\s*\(.*?\)", "", n).title().replace("Sas", "SAS").replace(" Sa", " SA")
         cartes = "".join(f'<a class="ent" href="{e(r["fiche"])}"><b>{e(joli_nom(r["nom"]))}</b><span>{e(r["activite"])}</span><small>{e(r["commune"].title())} · {e(r["effectif"])} salariés</small></a>' for r in fab)
-        s5.append(f'<div class="card"><h3>Près de chez moi : les entreprises qui ne publient pas</h3>'
+        s5.append(f'<div class="card"><h3>Candidatures spontanées près de Clermont</h3>'
                   f'<p class="hint">Dans le Puy-de-Dôme, <b>{len(ent)}</b> entreprises de plus de 20 salariés travaillent dans un secteur qui gère des gammes de produits. '
                   f'<b>{len(cache)}</b> n\'apparaissent dans aucune de mes offres. Voici les plus grands fabricants : des cibles pour une candidature spontanée.</p>'
                   f'<div class="ents">{cartes}</div>'
                   f'{source("API Recherche d entreprises (data.gouv)", ent_meta.get("requete", {}), ent_meta.get("date", ""), ent_meta.get("limites", ""), "data/entreprises_63.csv")}</div>')
     pro = contenu.get("professionnels", {})
     pl = "".join(f'<li><b>{e(p.get("nom"))}</b>, {e(p.get("poste"))}, {e(p.get("entreprise"))}</li>' for p in pro.get("liste", []))
-    s5.append(f'<div class="card"><h3>Des professionnels à contacter</h3>'
-              + (f'<ul class="facts">{pl}</ul>' if pl else '<p class="todo">Trois chefs de produit repérés sur LinkedIn : à compléter.</p>')
+    s5.append(f'<div class="card"><h3>Des chefs de produit à contacter</h3>'
+              + (f'<ul class="facts">{pl}</ul>' if pl else '<p class="todo">À compléter : trois chefs de produit repérés sur LinkedIn, dans les entreprises qui recrutent le plus.</p>')
               + '<p class="hint">Repérés à la main, seulement nom, poste et entreprise, pour ma candidature ; chacun peut demander à être retiré.</p></div>')
 
     # ---------------- 6. actions
@@ -470,7 +470,7 @@ def construire():
           f'<div class="tile"><b>{rep}</b><span>réponses ({st.get("entretien", 0)} entretien, {st.get("refusee", 0)} refus)</span></div>'
           f'<div class="tile"><b>{pct(rep, env)}</b><span>taux de réponse</span></div></div>'
           + source("Mon tableau de suivi (privé)", "Statut saisi à la main à chaque envoi, relance ou réponse", suivi.get("date_export", ""), "Le détail par entreprise reste privé ; seuls les totaux sont publiés.", "data/suivi-candidatures.json"),
-          '<ol class="actions">' + "".join(f'<li><time>{e(a["date"])}</time><div><b>{e(a["action"])}</b><p>Preuve : {e(a["preuve"])}</p></div></li>' for a in act.get("liste", [])) + "</ol>"]
+          '<h3 class="sous">Mes prochaines étapes</h3><ol class="actions">' + "".join(f'<li><time>{e(a["date"])}</time><div><b>{e(a["action"])}</b><p>Preuve : {e(a["preuve"])}</p></div></li>' for a in act.get("liste", [])) + "</ol>"]
 
     # ---------------- 7. fabrication
     nb_csv = sum(1 for f in glob.glob(os.path.join(DATA, "**", "*.csv"), recursive=True))
@@ -490,38 +490,37 @@ def construire():
     hero_tiles = [(nombre(c_stage["valeur"]) if c_stage else "–", "stages « chef de produit » en ligne en France"),
                   (nombre(c_alt["valeur"]) if c_alt else "–", "alternances « chef de produit » en ligne"),
                   (pct(n_idf, n_loc), "des offres en Île-de-France"),
-                  (nombre(env), "candidatures envoyées")]
-    s4[0] = s4[0].replace("<p class=\"retenir\"><b>À retenir</b>", "<p class=\"retenir\"><b>Et demain</b>", 1)
+                  (f"{env} / {suivi.get('briefs', 0)}", "candidatures envoyées sur celles préparées")]
+    s3[0] = s3[0].replace("<b>À retenir</b>", "<b>Ce qu'ils cherchent</b>", 1)
     sections = [
-        ("offres", "1", "Où et quand chercher", "".join(s2) + '<div id="metier"></div>' + "".join(s1[1:])),
-        ("competences", "2", "Ce qu'on attend de moi", "".join(s3) + '<div id="evolution"></div>' + "".join(s4)),
-        ("acteurs", "3", "Qui recrute", "".join(s5)),
-        ("actions", "4", f"Mes actions {flag(act)}", "".join(s6)),
+        ("offres", "1", "Les offres", "".join(s2) + "".join(s1[2:3])),
+        ("competences", "2", "Ce que les recruteurs demandent", "".join(s3)),
+        ("acteurs", "3", "Où candidater", "".join(s5)),
+        ("actions", "4", f"Où j'en suis {flag(act)}", "".join(s6)),
     ]
     nav = "".join(f'<a href="#{i}">{t.split(" <span")[0]}</a>' for i, n, t, _ in sections)
     corps = "".join(f'<section id="{i}"><header class="sh"><span class="n">{n}</span><h2>{t}</h2></header>{c}</section>' for i, n, t, c in sections)
     page = f'''<!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Chef de produit, le marché compté · Baptiste Veloso Ferreira</title>
-<meta name="description" content="Le marché des stages et alternances de chef de produit, compté à partir des offres : où, quand, combien, quelles compétences, qui recrute.">
+<title>Ma recherche de stage et d'alternance · Baptiste Veloso Ferreira</title>
+<meta name="description" content="Ma recherche de stage et d'alternance d'assistant chef de produit : les offres sur une carte, ce que demandent les recruteurs, les entreprises à cibler et où j'en suis.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="assets/style.css"></head><body>
 <header class="hero"><div class="in hero-grid"><div class="hero-txt">
-<p class="eyebrow">Séminaires métiers · {e(contenu.get("formation", ""))}</p>
-<h1>Chef de produit<br><em>le marché</em><br><em>compté</em></h1>
+<p class="eyebrow">{e(contenu.get("auteur", ""))} · M2 Marketing opérationnel et digital</p>
+<h1>Ma recherche<br><em>de stage et</em><br><em>d'alternance</em></h1>
 <div class="sep"><span></span><i></i><span></span></div>
-<p class="lead">Je cherche un stage d'assistant chef de produit à partir de janvier 2027, ou une alternance. Ce site compte les offres chaque matin pour savoir où, quand et comment candidater.</p>
-<p class="cta"><a class="btn" href="#offres">Voir la carte des offres <span aria-hidden="true">→</span></a><a class="btn ghost" href="#position">Ma conclusion</a></p>
-<p class="by">{e(contenu.get("auteur", ""))} · mis à jour le {fr_date(maj)}</p>
-</div><ul class="chips"><li><b>Données</b><span>datées</span></li><li><b>Sources</b><span>citées</span></li><li><b>Mise à jour</b><span>chaque matin</span></li></ul></div>
+<p class="lead">Assistant chef de produit, à partir de janvier 2027. Ici, toutes les offres que je repère chaque matin, ce que les recruteurs demandent, les entreprises à cibler et où j'en suis.</p>
+<p class="cta"><a class="btn" href="#offres">Voir la carte des offres <span aria-hidden="true">→</span></a><a class="btn ghost" href="#position">Ma stratégie</a></p>
+<p class="by">Mis à jour le {fr_date(maj)}</p>
+</div><ul class="chips"><li><b>Janvier 2027</b><span>début</span></li><li><b>Stage</b><span>ou alternance</span></li><li><b>2 sem. / 2 sem.</b><span>jusqu'à fin mars</span></li></ul></div>
 <div class="in"><div class="tiles big">{"".join(f'<div class="tile"><b>{v}</b><span>{l}</span></div>' for v, l in hero_tiles)}</div></div>
 </header>
-<nav class="toc"><div class="in">{nav}<a href="#position">Ma conclusion</a></div></nav>
+<nav class="toc"><div class="in">{nav}<a href="#position">Ma stratégie</a></div></nav>
 <main class="in">{corps}
-<section id="fabrication" class="methode">{s7}</section>
-<section id="position" class="position"><header class="sh"><span class="n">→</span><h2>Ma conclusion {flag(pos)}</h2></header><p>{e(pos.get("texte", ""))}</p></section>
+<section id="position" class="position"><header class="sh"><span class="n">→</span><h2>Ma stratégie {flag(pos)}</h2></header><p>{e(pos.get("texte", ""))}</p></section>
 </main>
-<footer><div class="in"><p>Données et scripts : <a href="{DEPOT}">{DEPOT.replace("https://", "")}</a>. Sous chaque graphique, « D'où vient ce chiffre ? » donne la source, la requête, la date et les limites.</p></div></footer>
+<footer><div class="in"><p>Les offres sont collectées automatiquement chaque matin (France Travail, Adzuna, La bonne alternance, annuaire des entreprises). Données et méthode : <a href="{DEPOT}">{DEPOT.replace("https://", "")}</a>.</p></div></footer>
 <script src="assets/carte.js"></script>
 </body></html>'''
     with open(os.path.join(RACINE, "index.html"), "w", encoding="utf-8") as f:
