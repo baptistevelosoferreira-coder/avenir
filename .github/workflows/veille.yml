@@ -1,0 +1,49 @@
+name: Veille du métier
+
+# Tous les jours : collecte des offres (France Travail, Adzuna, La bonne alternance),
+# mise à jour de la base d'entreprises du 63, reconstruction du site, puis commit.
+# L'historique Git devient l'archive datée du marché.
+on:
+  schedule:
+    - cron: "40 5 * * *"   # vers 6 h 40 (heure de Paris, hiver)
+  workflow_dispatch: {}
+  push:
+    branches: ["claude/**"]
+    paths: ["scripts/**", ".github/workflows/veille.yml"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: veille-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  veille:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests
+      - name: Collecter les offres
+        env:
+          FT_CLIENT_ID: ${{ secrets.FT_CLIENT_ID }}
+          FT_CLIENT_SECRET: ${{ secrets.FT_CLIENT_SECRET }}
+          ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
+          ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
+          LBA_TOKEN: ${{ secrets.LBA_TOKEN }}
+        run: python scripts/collecte.py
+      - name: Mettre à jour la base d'entreprises du 63
+        run: python scripts/entreprises.py || echo "API Recherche d'entreprises indisponible"
+      - name: Reconstruire le site
+        run: python scripts/site.py
+      - name: Enregistrer
+        run: |
+          git config user.name "veille-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data index.html
+          git diff --cached --quiet || git commit -m "Veille du $(date +%F)"
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
+          git push origin "HEAD:${GITHUB_REF_NAME}"
