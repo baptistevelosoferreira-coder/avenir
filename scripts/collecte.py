@@ -1,4 +1,4 @@
-"""Collecte datée du marché « chef de produit » (code ROME M1703).
+"""Collecte datée des offres de STAGE et d'ALTERNANCE de chef de produit (code ROME M1703).
 
 Canaux, tous officiels et utilisés selon leurs conditions :
   - France Travail, API « Offres d'emploi v2 »  (FT_CLIENT_ID, FT_CLIENT_SECRET)
@@ -29,6 +29,7 @@ UA = {"User-Agent": "avenir-veille-metier/1.0 (projet etudiant IAE Clermont)"}
 TIMEOUT = 40
 ROME = "M1703"
 INTITULE = "chef de produit"
+STAGE_ALT = "stage stagiaire internship alternance alternant apprentissage apprenti"
 VARIANTES = ["chef de produit", "assistant chef de produit", "chef de marque", "chef de gamme",
              "product manager", "brand manager", "chef de marche"]
 
@@ -105,30 +106,28 @@ def adzuna():
         except Exception as ex:
             log(f"Adzuna comptage '{desc}' : {ex}")
 
-    # 1. Volume par intitulé (titre de l'offre, offres actives des 30 derniers jours)
+    # 1. Volume par intitulé, stages et alternances seulement (offres des 30 derniers jours)
     for v in VARIANTES:
-        nb(f"offres dont le titre contient « {v} » (30 jours)", title_only=v, max_days_old=30)
+        nb(f"stage ou alternance, titre contenant « {v} » (30 jours)", title_only=v, what_or=STAGE_ALT, max_days_old=30)
     # 2. Contrats et lieux pour l'intitulé principal
-    nb("chef de produit : CDI (30 jours)", title_only=INTITULE, max_days_old=30, permanent=1)
-    nb("chef de produit : contrat à durée limitée (30 jours)", title_only=INTITULE, max_days_old=30, contract=1)
+    nb("chef de produit, tous contrats confondus (30 jours) : pour comparaison", title_only=INTITULE, max_days_old=30)
     nb("chef de produit : stage (30 jours)", title_only=INTITULE, what_or="stage stagiaire internship", max_days_old=30)
     nb("chef de produit : alternance (30 jours)", title_only=INTITULE, what_or="alternance alternant apprentissage apprenti",
        max_days_old=30)
-    nb("chef de produit : télétravail mentionné (30 jours)", title_only=INTITULE, what_or="télétravail teletravail remote",
-       max_days_old=30)
+    nb("chef de produit, stage ou alternance : télétravail mentionné (30 jours)", title_only=INTITULE,
+       what_and="télétravail", what_or=STAGE_ALT, max_days_old=30)
     for lieu, dist in [("Clermont-Ferrand", 40), ("Puy-de-Dôme", None), ("Auvergne-Rhône-Alpes", None),
                        ("Île-de-France", None), ("Lyon", 30)]:
-        p = {"title_only": INTITULE, "max_days_old": 30, "where": lieu}
+        p = {"title_only": INTITULE, "what_or": STAGE_ALT, "max_days_old": 30, "where": lieu}
         if dist:
             p["distance"] = dist
-        nb(f"chef de produit : {lieu}{f' ({dist} km)' if dist else ''} (30 jours)", **p)
-    nb("chef de produit : France, toutes dates actives", title_only=INTITULE)
+        nb(f"chef de produit, stage ou alternance : {lieu}{f' ({dist} km)' if dist else ''} (30 jours)", **p)
 
     # 3. Offres détaillées de l'intitulé principal (au plus 10 pages de 50)
     offres = []
     for page in range(1, 11):
         try:
-            d = get(f"search/{page}", title_only=INTITULE, max_days_old=30, results_per_page=50, sort_by="date")
+            d = get(f"search/{page}", title_only=INTITULE, what_or=STAGE_ALT, max_days_old=30, results_per_page=50, sort_by="date")
         except Exception as ex:
             log(f"Adzuna page {page} : {ex}")
             break
@@ -155,10 +154,10 @@ def adzuna():
     # 4. Statistiques Adzuna (mot-clé, pas seulement le titre)
     os.makedirs(SORTIE, exist_ok=True)
     stats = {}
-    for nom, chemin, p in [("geodata", "geodata", {"what_phrase": INTITULE, "location0": "France"}),
-                           ("histogramme_salaires", "histogram", {"what_phrase": INTITULE}),
+    for nom, chemin, p in [("geodata", "geodata", {"what_phrase": INTITULE, "what_or": STAGE_ALT, "location0": "France"}),
+                           ("histogramme_salaires", "histogram", {"what_phrase": INTITULE, "what_or": STAGE_ALT}),
                            ("historique_salaires", "history", {"what_phrase": INTITULE, "months": 12}),
-                           ("top_entreprises", "top_companies", {"what_phrase": INTITULE})]:
+                           ("top_entreprises", "top_companies", {"what_phrase": INTITULE, "what_or": STAGE_ALT})]:
         try:
             stats[nom] = {"requete": {"endpoint": chemin, **p}, "date": AUJ, "donnees": get(chemin, **p)}
         except Exception as ex:
@@ -195,9 +194,9 @@ def france_travail():
     for desc, p in [("offres ROME M1703, France", {"codeROME": ROME}),
                     ("offres ROME M1703, Puy-de-Dôme (63)", {"codeROME": ROME, "departement": "63"}),
                     ("offres ROME M1703, Auvergne-Rhône-Alpes", {"codeROME": ROME, "region": "84"}),
-                    ("offres ROME M1703, CDI", {"codeROME": ROME, "typeContrat": "CDI"}),
-                    ("offres ROME M1703, alternance", {"codeROME": ROME, "natureContrat": "E2,FS"}),
-                    ("offres mot-clé « chef de produit », France", {"motsCles": INTITULE})]:
+                    ("offres ROME M1703, alternance (apprentissage ou professionnalisation)", {"codeROME": ROME, "natureContrat": "E2,FS"}),
+                    ("offres ROME M1703, alternance, Auvergne-Rhône-Alpes", {"codeROME": ROME, "natureContrat": "E2,FS", "region": "84"}),
+                    ("offres mot-clé « stage chef de produit », France", {"motsCles": "stage,chef,produit"})]:
         try:
             compte("France Travail", desc, total(p), p, lim)
         except Exception as ex:
