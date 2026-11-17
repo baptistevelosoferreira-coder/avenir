@@ -10,11 +10,11 @@ Intitulés suivis : chef de produit, chef de marque, chef de gamme, chef de marc
 
 | Onglet | Contenu |
 |---|---|
-| 1. Les offres | Carte cliquable des offres, gratifications, dates de début, mots-clés à taper |
+| 1. Les offres | Carte cliquable des offres, dates de début, mots-clés à taper |
 | 2. Ce que les recruteurs demandent | Compétences et qualités demandées, comparées à mon CV |
 | 3. Où candidater | Secteurs, entreprises qui publient le plus, candidatures spontanées près de Clermont |
 | 4. Où j'en suis | Entonnoir de mes candidatures (totaux), prochaines étapes |
-| Accueil | Résumé et ma stratégie (trois priorités) |
+| Accueil | Résumé de ma recherche |
 
 Chaque graphique a un bloc « Source » qui donne le canal, la requête exacte, la date et les limites du chiffre, avec un lien vers le fichier de données.
 

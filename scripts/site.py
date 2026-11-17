@@ -375,7 +375,7 @@ def construire():
              f'<div class="months">' + "".join(f'<div class="m{" hl" if k == "Janvier" else ""}"><b>{debuts[k]}</b><span>{k}</span></div>' for k in ordre if debuts[k]) + "</div>"
              f'<p class="hint">Sur {n_annonces} annonces lues en entier. {duree6} précisent une durée de 6 mois. Je suis disponible à partir de janvier 2027.</p>'
              f'{source("Annonces lues en entier", "Champ « début » de chaque annonce", annonces[-1]["date_veille"] if annonces else "", "Beaucoup d annonces ne donnent pas de date de début.", "data/annonces-lues.csv")}</div>')
-    s2.append(f'<div class="grid2">{pay}{quand}</div>')
+    s2.append(quand)
 
     # ---------------- 3. compétences
     formation = set(contenu.get("formation_donne", []))
@@ -513,8 +513,7 @@ def construire():
 </div><ul class="chips"><li><b>Janvier 2027</b><span>début</span></li><li><b>Stage</b><span>ou alternance</span></li><li><b>2 sem. / 2 sem.</b><span>jusqu'à fin mars</span></li></ul></div>
 <div class="in"><div class="tiles big">{"".join(f'<div class="tile"><b>{v}</b><span>{l}</span></div>' for v, l in hero_tiles)}</div></div>
 </header>
-<div class="in"><section id="position" class="position"><header class="sh"><span class="n">→</span><h2>Ma stratégie {flag(pos)}</h2></header><p>{e(pos.get("intro", ""))}</p>
-<div class="prios">{"".join(f'<div class="prio"><i>Priorité {i}</i><b>{e(x["titre"])}</b><p>{e(x["texte"])}</p></div>' for i, x in enumerate(pos.get("priorites", []), 1))}</div>{suivant("accueil")}</section></div>
+<div class="in">{suivant("accueil")}</div>
 </section>
 {corps}
 </main>
