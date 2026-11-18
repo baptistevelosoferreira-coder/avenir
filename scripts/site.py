@@ -453,27 +453,11 @@ def construire():
     rec_ent = Counter({max(g, key=lambda x: (g[x], not x.isupper())): sum(g.values()) for g in graphies.values()})
     rec_ent = Counter({(k.title().replace('Bnp', 'BNP') if k.isupper() else k): v for k, v in rec_ent.items()})
     top = rec_ent.most_common(10)
-    s5 = [retenir(f"L'<b>agroalimentaire</b> et la <b>santé</b> recrutent le plus de stagiaires dans mes offres ; la distribution (Cdiscount, Monoprix) publie beaucoup. "
-                  f"Autour de Clermont, des dizaines d'entreprises fabriquent des produits de marque <b>sans publier d'offre</b> : c'est là que je peux candidater spontanément.")]
+    s5 = [retenir(f"L'<b>agroalimentaire</b> et la <b>santé</b> recrutent le plus de stagiaires dans mes offres ; la distribution (Cdiscount, Monoprix) publie beaucoup.")]
     s5.append(f'<div class="grid2"><div class="card"><h3>Les secteurs de mes offres</h3><p class="hint">Secteur des {suivi.get("briefs", 0)} offres que j\'ai retenues pour candidater.</p>{barres(lig)}'
               f'{source("Veille quotidienne et mon tableau de suivi", "Secteur attribué à chaque offre retenue", suivi.get("date_export", ""), "Échantillon choisi pour mon profil : il dit où je candidate autant que qui recrute.", "data/suivi-candidatures.json")}</div>'
               f'<div class="card"><h3>Les entreprises qui publient le plus</h3><p class="hint">Nombre d\'offres repérées {periode}. Cliquer sur un nom pour voir ses offres sur la carte.</p>{barres([(f'<button type="button" class="lien-q" data-q="{e(k)}">{e(k)}</button>', v) for k, v in top])}'
               f'{source("Veille quotidienne", "Champ entreprise des offres retenues", v_fin, "Écoles, cabinets et annonces sans employeur retirés ; noms écrits différemment regroupés.", "data/veille-stage-alternance/")}</div></div>')
-    if ent:
-        pub = {norm(k) for k in rec_ent}
-        cache = [r for r in ent if not any(norm(r["nom"]).split(" ")[0] in p for p in pub if p)]
-        taille = lambda r: int(re.sub(r"\D", "", r["effectif"].split(" à ")[0].split(" et ")[0]) or 0)
-        utiles = ("Agroalimentaire", "Boissons", "Pharmacie", "Cosmétique et entretien", "Sport, jouets, médical")
-        fab = sorted([r for r in cache if r["famille"] in utiles], key=lambda r: -taille(r))[:10]
-        joli_nom = lambda n: re.sub(r"\s*\(.*?\)", "", n).title().replace("Sas", "SAS").replace(" Sa", " SA")
-        cartes = "".join(f'<div class="ent"><b>{e(joli_nom(r["nom"]))}</b><span>{e(r["activite"])}</span><small>{e(r["commune"].title())} · {e(r["effectif"])} salariés</small>'
-                         f'<p class="ent-liens"><a href="https://www.google.com/search?q={e(joli_nom(r["nom"]).replace(" ", "+"))}+recrutement+stage" target="_blank" rel="noopener">Page carrière ↗</a>'
-                         f'<a href="{e(r["fiche"])}" target="_blank" rel="noopener">Fiche entreprise ↗</a></p></div>' for r in fab)
-        s5.append(f'<div class="card"><h3>Candidatures spontanées près de Clermont</h3>'
-                  f'<p class="hint">Dans le Puy-de-Dôme, <b>{len(ent)}</b> entreprises de plus de 20 salariés travaillent dans un secteur qui gère des gammes de produits. '
-                  f'<b>{len(cache)}</b> n\'apparaissent dans aucune de mes offres. Voici les plus grands fabricants de l\'agroalimentaire, de la santé, de la cosmétique et du sport : des cibles pour une candidature spontanée.</p>'
-                  f'<div class="ents">{cartes}</div>'
-                  f'{source("API Recherche d entreprises (data.gouv)", ent_meta.get("requete", {}), ent_meta.get("date", ""), ent_meta.get("limites", ""), "data/entreprises_63.csv")}</div>')
 
     # ---------------- 6. actions
     def entonnoir(suivi, env, rep, st):
