@@ -22,7 +22,7 @@ UA = {"User-Agent": "avenir-veille-metier/1.0 (projet etudiant)"}
 BASE = "https://api.adzuna.com/v1/api/jobs/fr"
 EXCLU = "stage stagiaire internship alternance alternant apprentissage apprenti"
 JOURS = 60
-METIERS = ["chef de produit", "chef de gamme", "chef de marque", "brand manager", "product marketing",
+METIERS = ["chef de produit", "assistant chef de produit", "chef de gamme", "chef de marque", "brand manager", "product marketing",
            "marketing produit", "category manager", "chef de projet marketing", "trade marketing"]
 CONTRATS = {"permanent": "CDI", "contract": "CDD"}
 LIM = ("Adzuna agrège les offres de nombreux sites (une offre publiée plusieurs fois compte une fois), "

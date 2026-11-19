@@ -7,7 +7,7 @@
   {
    "metier": "chef de produit",
    "contrat": "tous",
-   "valeur": 380,
+   "valeur": 379,
    "salaire_moyen": 45167.61,
    "requete": {
     "title_only": "chef de produit",
@@ -18,7 +18,7 @@
   {
    "metier": "chef de produit",
    "contrat": "CDI",
-   "valeur": 179,
+   "valeur": 178,
    "salaire_moyen": 45447.37,
    "requete": {
     "title_only": "chef de produit",
@@ -34,6 +34,41 @@
    "salaire_moyen": 39840.92,
    "requete": {
     "title_only": "chef de produit",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60,
+    "contract": 1
+   }
+  },
+  {
+   "metier": "assistant chef de produit",
+   "contrat": "tous",
+   "valeur": 10,
+   "salaire_moyen": 33666.67,
+   "requete": {
+    "title_only": "assistant chef de produit",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60
+   }
+  },
+  {
+   "metier": "assistant chef de produit",
+   "contrat": "CDI",
+   "valeur": 5,
+   "salaire_moyen": 33666.67,
+   "requete": {
+    "title_only": "assistant chef de produit",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60,
+    "permanent": 1
+   }
+  },
+  {
+   "metier": "assistant chef de produit",
+   "contrat": "CDD",
+   "valeur": 1,
+   "salaire_moyen": null,
+   "requete": {
+    "title_only": "assistant chef de produit",
     "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
     "max_days_old": 60,
     "contract": 1
@@ -217,7 +252,7 @@
   {
    "metier": "category manager",
    "contrat": "tous",
-   "valeur": 81,
+   "valeur": 80,
    "salaire_moyen": 46588.24,
    "requete": {
     "title_only": "category manager",
@@ -228,7 +263,7 @@
   {
    "metier": "category manager",
    "contrat": "CDI",
-   "valeur": 30,
+   "valeur": 29,
    "salaire_moyen": 45750,
    "requete": {
     "title_only": "category manager",
@@ -352,7 +387,7 @@
   {
    "metier": "chef de produit",
    "contrat": "tous",
-   "valeur": 42,
+   "valeur": 41,
    "salaire_moyen": 48136.36,
    "requete": {
     "title_only": "chef de produit",
@@ -367,7 +402,7 @@
   {
    "metier": "chef de produit",
    "contrat": "tous",
-   "valeur": 22,
+   "valeur": 21,
    "salaire_moyen": 38700,
    "requete": {
     "title_only": "chef de produit",
@@ -382,7 +417,7 @@
   {
    "metier": "chef de produit",
    "contrat": "tous",
-   "valeur": 134,
+   "valeur": 133,
    "salaire_moyen": 46608.11,
    "requete": {
     "title_only": "chef de produit",
@@ -417,16 +452,16 @@
     "what": "chef de produit"
    },
    "donnees": {
+    "__CLASS__": "Adzuna::API::Response::SalaryHistogram",
     "histogram": {
      "70000": 6,
-     "30000": 61,
-     "20000": 19,
+     "10000": 9,
      "50000": 50,
+     "20000": 19,
      "40000": 112,
      "60000": 11,
-     "10000": 9
-    },
-    "__CLASS__": "Adzuna::API::Response::SalaryHistogram"
+     "30000": 61
+    }
    }
   },
   "historique": {
@@ -436,27 +471,27 @@
     "months": 24
    },
    "donnees": {
-    "what": "chef de produit",
-    "__CLASS__": "Adzuna::API::Response::HistoricalSalary",
     "month": {
-     "2026-06": 41237.09,
-     "2026-10": 44355.99,
-     "2026-08": 43035.27,
-     "2026-01": 40660.66,
-     "2025-11": 41954.97,
-     "2026-05": 40960.34,
-     "2026-04": 40218,
      "2026-02": 40832.13,
-     "2026-07": 41145.16,
+     "2026-04": 40218,
+     "2026-10": 44355.99,
+     "2026-05": 40960.34,
      "2026-03": 42111.89,
+     "2026-09": 43156.96,
      "2025-12": 42429.78,
-     "2026-09": 43156.96
-    }
+     "2026-01": 40660.66,
+     "2026-08": 43035.27,
+     "2026-07": 41145.16,
+     "2026-06": 41237.09,
+     "2025-11": 41954.97
+    },
+    "__CLASS__": "Adzuna::API::Response::HistoricalSalary",
+    "what": "chef de produit"
    }
   }
  },
- "stage_alternance_chef_de_produit": 309,
- "offres_detaillees": 598,
+ "stage_alternance_chef_de_produit": 310,
+ "offres_detaillees": 597,
  "journal": [
   "salaires_cdi : 400 Client Error: Bad Request for url: https://api.adzuna.com/v1/api/jobs/fr/histogram?what=chef+de+produit&permanent=1&app_id=***&app_key=***"
  ]
