@@ -21,7 +21,7 @@ import requests
 
 RACINE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 AUJ = dt.date.today().isoformat()
-UA = {"User-Agent": "avenir-veille-metier/1.0 (projet etudiant IAE Clermont)"}
+UA = {"User-Agent": "avenir-veille-metier/1.0 (projet etudiant)"}
 
 NAF = {
     "10.11Z": "Transformation de la viande de boucherie", "10.13A": "Préparation industrielle de produits à base de viande",

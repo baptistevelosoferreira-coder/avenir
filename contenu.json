@@ -1,7 +1,5 @@
 {
   "_lisez_moi": "Textes rédigés à la main, que le script site.py insère dans la page. Passer a_valider à false une fois le texte relu et corrigé par Baptiste.",
-  "auteur": "Baptiste Veloso Ferreira",
-  "formation": "M2 Marketing opérationnel et digital, IAE Clermont Auvergne (2025-2027)",
   "recherche": "Stage de fin d'études d'assistant chef de produit, de janvier à septembre 2027 (rythme alterné 2 semaines / 2 semaines jusqu'à fin mars, puis temps plein à partir du 29 mars), ou alternance sur la même période.",
   "formation_donne": [
     "mix marketing",
@@ -43,7 +41,7 @@
       },
       {
         "titre": "L'alternance sur la même période",
-        "texte": "Il y a plus d'une centaine d'offres d'alternance en ligne : je postule aussi quand le rythme est compatible avec l'IAE."
+        "texte": "Il y a plus d'une centaine d'offres d'alternance en ligne : je postule aussi quand le rythme est compatible avec mon école."
       },
       {
         "titre": "Des candidatures spontanées dans le Puy-de-Dôme",

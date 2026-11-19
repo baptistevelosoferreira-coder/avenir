@@ -2,6 +2,10 @@
 
 Chaque chiffre affiché porte sa source : canal, requête, date et limites.
 Relancer : python scripts/site.py  (aucune dépendance hors bibliothèque standard)
+
+Version publique par défaut : aucune donnée personnelle (ni nom, ni école, ni suivi de candidatures).
+Version privée : AVENIR_PRIVE=<dossier> python scripts/site.py lit identite.json et
+suivi-candidatures.json dans ce dossier (hors dépôt) et écrit la page dans <dossier>/site/.
 """
 import csv
 import datetime as dt
@@ -18,6 +22,7 @@ from collections import Counter, defaultdict
 RACINE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(RACINE, "data")
 DEPOT = "https://github.com/baptistevelosoferreira-coder/avenir"
+PRIVE = os.environ.get("AVENIR_PRIVE", "")
 MOIS = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."]
 
 
@@ -305,7 +310,8 @@ def construire():
     ent = lire_csv(os.path.join(DATA, "entreprises_63.csv"))
     ent_jours = sorted(glob.glob(os.path.join(DATA, "*", "entreprises_63.json")))
     ent_meta = lire_json(ent_jours[-1], {}) if ent_jours else {}
-    suivi = lire_json(os.path.join(DATA, "suivi-candidatures.json"), {})
+    suivi = lire_json(os.path.join(PRIVE, "suivi-candidatures.json"), {}) if PRIVE else {}
+    ident = lire_json(os.path.join(PRIVE, "identite.json"), {}) if PRIVE else {}
     n_annonces = len(annonces)
     stage_annonces = sum(1 for a in annonces if a["contrat"] != "alternance")
     flag = lambda bloc: '<span class="draft">brouillon à valider</span>' if bloc.get("a_valider") else ""
@@ -342,7 +348,7 @@ def construire():
 <div class="carte-corps"><div class="carte-svg"><svg id="carte" viewBox="0 0 420 410" role="img" aria-label="Carte de France des offres">
 <path class="land" d="{chemin(FRANCE)}"/><path class="land" d="{chemin(CORSE)}"/><g id="bulles"></g>
 <circle class="home" cx="{hx:.1f}" cy="{hy:.1f}" r="7"/><text class="city muted" x="{hx - 10:.1f}" y="{hy + 4:.1f}" text-anchor="end">Clermont-Fd</text></svg>
-<p class="legende"><span class="pt-idf"></span>Île-de-France <span class="pt-autre"></span>autres villes <span class="pt-home"></span>Clermont-Ferrand, chez moi</p></div>
+<p class="legende"><span class="pt-idf"></span>Île-de-France <span class="pt-autre"></span>autres villes <span class="pt-home"></span>Clermont-Ferrand{", chez moi" if PRIVE else ""}</p></div>
 <div class="panneau" id="panneau" aria-live="polite"></div></div>
 {source("Veille quotidienne (Adzuna, La bonne alternance)", "; ".join(veille.get("requetes_adzuna", [])), v_fin, "Lieu donné par l'annonce et rattaché à une ville par le script ; les lieux flous (« France ») ne sont pas placés. Certaines offres anciennes sont peut-être déjà pourvues.", "data/veille-stage-alternance/")}
 <script type="application/json" id="donnees-carte">{donnees_carte}</script></div>'''
@@ -454,8 +460,13 @@ def construire():
     rec_ent = Counter({(k.title().replace('Bnp', 'BNP') if k.isupper() else k): v for k, v in rec_ent.items()})
     top = rec_ent.most_common(10)
     s5 = [retenir(f"L'<b>agroalimentaire</b> et la <b>santé</b> recrutent le plus de stagiaires dans mes offres ; la distribution (Cdiscount, Monoprix) publie beaucoup.")]
-    s5.append(f'<div class="grid2"><div class="card"><h3>Les secteurs de mes offres</h3><p class="hint">Secteur des {suivi.get("briefs", 0)} offres que j\'ai retenues pour candidater.</p>{barres(lig)}'
-              f'{source("Veille quotidienne et mon tableau de suivi", "Secteur attribué à chaque offre retenue", suivi.get("date_export", ""), "Échantillon choisi pour mon profil : il dit où je candidate autant que qui recrute.", "data/suivi-candidatures.json")}</div>'
+    carte_ent = (f'<div class="card"><h3>Les entreprises qui publient le plus</h3><p class="hint">Nombre d\'offres repérées {periode}. Cliquer sur un nom pour voir ses offres sur la carte.</p>{barres([(f'<button type="button" class="lien-q" data-q="{e(k)}">{e(k)}</button>', v) for k, v in top])}'
+                 f'{source("Veille quotidienne", "Champ entreprise des offres retenues", v_fin, "Écoles, cabinets et annonces sans employeur retirés ; noms écrits différemment regroupés.", "data/veille-stage-alternance/")}</div>')
+    if not suivi:
+        s5.append(carte_ent)
+    else:
+      s5.append(f'<div class="grid2"><div class="card"><h3>Les secteurs de mes offres</h3><p class="hint">Secteur des {suivi.get("briefs", 0)} offres que j\'ai retenues pour candidater.</p>{barres(lig)}'
+              f'{source("Veille quotidienne et mon tableau de suivi", "Secteur attribué à chaque offre retenue", suivi.get("date_export", ""), "Échantillon choisi pour mon profil : il dit où je candidate autant que qui recrute.", "")}</div>'
               f'<div class="card"><h3>Les entreprises qui publient le plus</h3><p class="hint">Nombre d\'offres repérées {periode}. Cliquer sur un nom pour voir ses offres sur la carte.</p>{barres([(f'<button type="button" class="lien-q" data-q="{e(k)}">{e(k)}</button>', v) for k, v in top])}'
               f'{source("Veille quotidienne", "Champ entreprise des offres retenues", v_fin, "Écoles, cabinets et annonces sans employeur retirés ; noms écrits différemment regroupés.", "data/veille-stage-alternance/")}</div></div>')
 
@@ -478,7 +489,7 @@ def construire():
     act = contenu.get("actions", {})
     s6 = [retenir(f"J'ai préparé <b>{suivi.get('briefs', 0)}</b> candidatures et envoyé <b>{env}</b>. La priorité : envoyer les <b>{st.get('a_envoyer', 0)}</b> prêtes avant fin novembre, car les stages de janvier se pourvoient maintenant."),
           entonnoir(suivi, env, rep, st)
-          + source("Mon tableau de suivi (privé)", "Statut saisi à la main à chaque envoi, relance ou réponse", suivi.get("date_export", ""), "Le détail par entreprise reste privé ; seuls les totaux sont publiés.", "data/suivi-candidatures.json"),
+          + source("Mon tableau de suivi (privé)", "Statut saisi à la main à chaque envoi, relance ou réponse", suivi.get("date_export", ""), "Le détail par entreprise reste privé.", ""),
           '<h3 class="sous">Mes prochaines étapes</h3><ol class="actions">' + "".join(f'<li><time>{e(a["date"])}</time><div><b>{e(a["action"])}</b></div></li>' for a in act.get("liste", [])) + "</ol>"]
 
     # ---------------- page
@@ -487,6 +498,8 @@ def construire():
     hero_tiles = [(nombre(c_stage["valeur"]) if c_stage else "–", "stages « chef de produit » en ligne en France"),
                   (nombre(c_alt["valeur"]) if c_alt else "–", "alternances « chef de produit » en ligne"),
                   (f"{env} / {suivi.get('briefs', 0)}", "candidatures envoyées sur celles préparées")]
+    if not suivi:
+        hero_tiles = hero_tiles[:2]
     s3[0] = s3[0].replace("<b>À retenir</b>", "<b>Ce qu'ils cherchent</b>", 1)
     sections = [
         ("offres", "1", "Les offres", "".join(s2) + "".join(s1[1:])),
@@ -494,6 +507,9 @@ def construire():
         ("acteurs", "3", "Où candidater", "".join(s5)),
         ("actions", "4", f"Où j'en suis {flag(act)}", "".join(s6)),
     ]
+    if not suivi:
+        sections = sections[:3]
+        SOURCES[:] = [x for x in SOURCES if "suivi" not in x[0]]
     courts = {"offres": "Les offres", "competences": "Les attentes des recruteurs", "acteurs": "Où candidater", "actions": "Où j'en suis"}
     onglets = [("accueil", "Accueil")] + [(i, courts[i]) for i, *_ in sections]
     nav = "".join(f'<a href="#{i}" data-onglet="{i}">{t}</a>' for i, t in onglets)
@@ -505,19 +521,19 @@ def construire():
     corps = "".join(f'<section id="{i}" class="onglet"><div class="in"><header class="sh"><span class="n">{n}</span><h2>{t}</h2></header>{c}{suivant(i)}</div></section>' for i, n, t, c in sections)
     page = f'''<!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Ma recherche de stage et d'alternance · Baptiste Veloso Ferreira</title>
+<title>Ma recherche de stage et d'alternance{" · " + e(ident["auteur"]) if ident.get("auteur") else ""}</title>
 <meta name="description" content="Ma recherche de stage et d'alternance d'assistant chef de produit : les offres sur une carte, ce que demandent les recruteurs, les entreprises à cibler et où j'en suis.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Playfair+Display:wght@600;700;800&family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="assets/style.css"></head><body><div class="lave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
-<nav class="toc" aria-label="Onglets"><div class="in"><span class="marque">Baptiste · stage &amp; alternance</span>{nav}</div></nav>
+<nav class="toc" aria-label="Onglets"><div class="in"><span class="marque">{e(ident["auteur"].split(" ")[0]) + " · " if ident.get("auteur") else ""}{"stage" if ident.get("auteur") else "Stage"} &amp; alternance</span>{nav}</div></nav>
 <main>
 <section id="accueil" class="onglet">
 <header class="hero"><div class="in hero-grid"><div class="hero-txt">
-<p class="eyebrow">{e(contenu.get("auteur", ""))} · M2 Marketing opérationnel et digital</p>
+<p class="eyebrow">{e(ident["auteur"]) + " · " if ident.get("auteur") else ""}M2 Marketing opérationnel et digital</p>
 <h1>Ma recherche<br><em>de stage et</em><br><em>d'alternance</em></h1>
 <div class="sep"><span></span><i></i><span></span></div>
-<p class="lead">Assistant chef de produit, à partir de janvier 2027. Ici, toutes les offres que je repère chaque matin, ce que les recruteurs demandent, les entreprises à cibler et où j'en suis.</p>
-<p class="cta"><a class="btn" href="#offres">Voir la carte des offres <span aria-hidden="true">→</span></a><a class="btn ghost" href="#actions">Où j\'en suis</a></p>
+<p class="lead">Assistant chef de produit, à partir de janvier 2027. Ici, toutes les offres que je repère chaque matin, ce que les recruteurs demandent, les entreprises à cibler{" et où j'en suis" if suivi else ''}.</p>
+<p class="cta"><a class="btn" href="#offres">Voir la carte des offres <span aria-hidden="true">→</span></a>{'<a class="btn ghost" href="#actions">Où j' + "'" + 'en suis</a>' if suivi else '<a class="btn ghost" href="#competences">Ce que demandent les recruteurs</a>'}</p>
 <p class="by">Mis à jour le {fr_date(maj)}</p>
 </div><ul class="chips"><li><b>Janvier 2027</b><span>début</span></li><li><b>Stage</b><span>ou alternance</span></li><li><b>2 sem. / 2 sem.</b><span>jusqu'à fin mars</span></li></ul></div>
 <div class="in"><div class="tiles big">{"".join(f'<div class="tile"><b>{v}</b><span>{l}</span></div>' for v, l in hero_tiles)}</div></div>
@@ -530,7 +546,12 @@ def construire():
 <script src="assets/onglets.js"></script>
 <script src="assets/carte.js"></script>
 </body></html>'''
-    with open(os.path.join(RACINE, "index.html"), "w", encoding="utf-8") as f:
+    sortie = os.path.join(PRIVE, "site") if PRIVE else RACINE
+    if PRIVE:
+        import shutil
+        os.makedirs(sortie, exist_ok=True)
+        shutil.copytree(os.path.join(RACINE, "assets"), os.path.join(sortie, "assets"), dirs_exist_ok=True)
+    with open(os.path.join(sortie, "index.html"), "w", encoding="utf-8") as f:
         f.write(page)
     print(f"index.html écrit ({len(page) // 1024} Ko), dernière collecte : {dernier}")
 

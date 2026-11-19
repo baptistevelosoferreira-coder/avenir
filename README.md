@@ -12,8 +12,7 @@ Intitulés suivis : chef de produit, chef de marque, chef de gamme, chef de marc
 |---|---|
 | 1. Les offres | Carte cliquable des offres, dates de début, mots-clés à taper |
 | 2. Ce que les recruteurs demandent | Compétences et qualités demandées, comparées à mon CV |
-| 3. Où candidater | Secteurs, entreprises qui publient le plus, candidatures spontanées près de Clermont |
-| 4. Où j'en suis | Entonnoir de mes candidatures (totaux), prochaines étapes |
+| 3. Où candidater | Entreprises qui publient le plus |
 | Accueil | Résumé de ma recherche |
 
 Chaque graphique a un bloc « Source » qui donne le canal, la requête exacte, la date et les limites du chiffre, avec un lien vers le fichier de données.
@@ -41,7 +40,6 @@ assets/style.css          mise en page
 data/AAAA-MM-JJ/          une extraction datée : CSV des offres, comptages.json (requête de chaque chiffre)
 data/veille-stage-alternance/   veille quotidienne du 5 au 17 novembre 2026 (une ligne par offre retenue)
 data/annonces-lues.csv    annonces lues en entier (missions, profil, gratification, début)
-data/suivi-candidatures.json    totaux de mon suivi de candidatures (le détail reste privé)
 data/entreprises_63.csv   base des entreprises du Puy-de-Dôme
 .github/workflows/veille.yml    automatisation quotidienne
 ```
@@ -68,5 +66,5 @@ Ou depuis GitHub : onglet **Actions → Veille du métier → Run workflow**.
 
 ## RGPD
 
-Le dépôt est public. Il ne contient ni CV, ni lettre, ni coordonnées, ni le détail de mes candidatures entreprise par entreprise : seulement des totaux.
+Le dépôt est public. Il ne contient aucune donnée personnelle : ni nom, ni école, ni CV, ni lettre, ni coordonnées, ni suivi de candidatures. Ces éléments restent dans une version privée du site, construite hors du dépôt (`AVENIR_PRIVE=<dossier> python scripts/site.py`).
 La base d'entreprises ne contient aucun nom de personne.

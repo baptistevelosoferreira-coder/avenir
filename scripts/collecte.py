@@ -25,7 +25,7 @@ import requests
 RACINE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 AUJ = dt.date.today().isoformat()
 SORTIE = os.path.join(RACINE, "data", AUJ)
-UA = {"User-Agent": "avenir-veille-metier/1.0 (projet etudiant IAE Clermont)"}
+UA = {"User-Agent": "avenir-veille-metier/1.0 (projet etudiant)"}
 TIMEOUT = 40
 ROME = "M1703"
 INTITULE = "chef de produit"
