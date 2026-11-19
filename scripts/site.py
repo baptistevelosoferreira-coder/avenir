@@ -401,7 +401,10 @@ def section_marche():
     h = ['<h3 class="sous gros-titre" id="et-apres">Et après ? Le marché de l\'emploi en CDI et CDD</h3>',
          retenir(f"Le métier recrute : <b>{nombre(tot.get('valeur', 0))}</b> offres d'emploi de chef de produit en {M.get('jours', 60)} jours, surtout en CDI. "
                  f"Les annonces affichent surtout entre <b>{k_euros(q1) if q1 else '–'}</b> et <b>{k_euros(q3) if q3 else '–'}</b> brut par an, au-dessus du repère d'insertion de l'IAE (2 433 € brut par mois à un an, environ 29 k€ par an) car beaucoup demandent de l'expérience. "
-                 f"Ma position : viser un stage de fin d'études dans une entreprise qui recrute aussi en CDI, pour en faire ma première expérience de chef de produit."),
+                 f"Attention, ce niveau de salaire est sans doute gonflé par le poids de Paris et de l'Île-de-France, où se trouvent {pct(n_idf, len(loc))} des offres et où les salaires sont plus élevés. "
+                 f"Ces postes de chef de produit sont aussi généralement accessibles après quelques années d'expérience. "
+                 f"Mon but : décrocher d'abord un poste d'<b>assistant chef de produit</b> ou de <b>chef de produit junior</b>, puis évoluer vers un poste de chef de produit. "
+                 f"Mon stage de fin d'études, dans une entreprise qui recrute aussi en CDI, doit m'y préparer."),
          '<div class="bref bref4">' + "".join(f'<div><b>{v}</b><span>{l}</span><small>{n}</small></div>' for v, l, n in bref) + "</div>"]
 
     # carte + tableau
@@ -435,7 +438,7 @@ def section_marche():
         source("Indeed (recherche d'offres)", "chef de produit, chef de gamme, chef de marque, product marketing manager · plusieurs villes · temps plein ou CDD", "2026-11-19", "Recherches faites avec le connecteur officiel Indeed (pas d'aspiration du site), avec l'accord de l'enseignant car l'API France Travail ne répondait pas. Échantillon : 10 résultats par recherche, sans total ni salaire ; les doublons avec Adzuna sont retirés.", "data/marche/indeed_2026-11-19.json")
 
     # métiers : CDI / CDD / non précisé
-    noms_m = {"chef de produit": "Chef de produit", "chef de gamme": "Chef de gamme", "chef de marque": "Chef de marque", "brand manager": "Brand manager",
+    noms_m = {"chef de produit": "Chef de produit", "assistant chef de produit": "Assistant chef de produit", "chef de gamme": "Chef de gamme", "chef de marque": "Chef de marque", "brand manager": "Brand manager",
               "product marketing": "Product marketing", "marketing produit": "Marketing produit", "category manager": "Category manager",
               "chef de projet marketing": "Chef de projet marketing", "trade marketing": "Trade marketing"}
     lig, lig_pct = [], []
@@ -455,6 +458,33 @@ def section_marche():
 <div class="metiers-vue" data-vue="n">{barres_empilees(lig, ["cdi", "cdd", "np"], {"cdi": "CDI", "cdd": "CDD", "np": "contrat non précisé"})}</div>
 <div class="metiers-vue" data-vue="p" hidden>{barres(lig_pct, maxi=100, unite=" %")}<p class="hint">Part de CDI parmi les offres dont le contrat est précisé.</p></div></div>''')
 
+    # zoom : assistant chef de produit (le poste d'entrée)
+    asst = [o for o in offres if re.search(r"\bassistant\S{0,6} (de )?chef (de )?produit", norm(o["t"])) and not re.search(r"intership|interpret", norm(o["t"]))]
+    a_tot, a_cdi, a_cdd = (cpt("assistant chef de produit", c).get("valeur") for c in ("tous", "CDI", "CDD"))
+    if asst or a_tot:
+        a_sals = sorted(o["sal"] for o in asst if o["sal"])
+        a_med = statistics.median(a_sals) if len(a_sals) >= 3 else None
+        a_moy = cpt("assistant chef de produit").get("salaire_moyen")
+        a_villes = Counter("Lieu non précisé" if norm(o["l"]).strip() in ("", "france") else re.sub(r"\s*\(\d+\)", "", o["l"].split(",")[0]).strip() for o in asst)
+        a_bref = [(nombre(a_tot) if a_tot is not None else "–", f"offres d'emploi « assistant chef de produit » en {M.get('jours', 60)} jours",
+                   f"soit {pct(a_tot, tot.get('valeur'))} des offres « chef de produit »" if a_tot and tot.get("valeur") else ""),
+                  (f"{nombre(a_cdi or 0)} CDI · {nombre(a_cdd or 0)} CDD" if a_cdi is not None else "–", "quand le contrat est précisé",
+                   f"{pct(a_cdi or 0, (a_cdi or 0) + (a_cdd or 0))} de CDI" if (a_cdi or 0) + (a_cdd or 0) else ""),
+                  (k_euros(a_med) if a_med else (k_euros(a_moy) if a_moy else "–"), "salaire annuel brut " + ("médian affiché" if a_med else "moyen affiché (Adzuna)"),
+                   f"contre {k_euros(med)} pour l'ensemble des offres" if med else ""),
+                  (str(len(asst)), "offres détaillées ci-dessous", f"{sum(1 for o in asst if o['src'] == 'Indeed')} via Indeed, {sum(1 for o in asst if o['src'] == 'Adzuna')} via Adzuna")]
+        comp = [("Assistant chef de produit (emploi)", a_tot or 0), ("Chef de produit (emploi)", tot.get("valeur") or 0)] + ([("Chef de produit (stage, alternance)", stal)] if stal else [])
+        lignes_a = "".join(f'<tr><td>{"<a href=" + chr(34) + e(o["u"]) + chr(34) + " target=_blank rel=noopener>" + e(o["t"]) + "</a>" if o["u"] else e(o["t"])}</td><td>{e(o["e"] or "Non précisée")}</td><td>{e(o["l"])}</td>'
+                           f'<td class="nw">{e(o["c"] or "–")}</td><td class="num">{k_euros(o["sal"]) if o["sal"] else "–"}</td><td class="nw">{e(fr_date(o["d"]) if o["d"] else "–")}</td><td class="nw">{o["src"]}</td></tr>'
+                           for o in sorted(asst, key=lambda o: o["d"], reverse=True))
+        h.append(f'''<div class="card zoom" id="assistant"><h3>Zoom : assistant chef de produit, hors stage et alternance</h3>
+<p class="hint">Le poste d'entrée le plus proche de mon stage : un premier emploi en CDI ou en CDD, souvent ouvert aux jeunes diplômés. Offres des {M.get("jours", 60)} derniers jours dont l'intitulé contient « assistant chef de produit ».</p>
+<div class="bref bref4">{"".join(f'<div><b>{v}</b><span>{l}</span><small>{n}</small></div>' for v, l, n in a_bref)}</div>
+<div class="grid2"><div><p class="hint">Volume comparé (offres en {M.get("jours", 60)} jours) :</p>{barres(comp)}</div>
+<div><p class="hint">Où sont ces offres :</p>{barres([(e(k), v) for k, v in a_villes.most_common(8)])}</div></div>
+{('<div class="tablebox"><table><thead><tr><th>Intitulé</th><th>Entreprise</th><th>Lieu</th><th>Contrat</th><th class="num">Salaire</th><th>Publiée</th><th>Source</th></tr></thead><tbody>' + lignes_a + '</tbody></table></div>') if asst else ""}
+<p class="warn">Peu d'offres portent ce titre exact : beaucoup d'entreprises recrutent un « chef de produit junior » pour le même rôle. Le volume est petit, les pourcentages sont donc à lire avec prudence.</p></div>''')
+
     # salaires
     bornes = [(0, 30000, "moins de 30 k€"), (30000, 35000, "30 à 35 k€"), (35000, 40000, "35 à 40 k€"), (40000, 45000, "40 à 45 k€"),
               (45000, 50000, "45 à 50 k€"), (50000, 60000, "50 à 60 k€"), (60000, 10 ** 9, "60 k€ et plus")]
@@ -464,7 +494,7 @@ def section_marche():
     h.append(f'''<div class="grid2"><div class="card"><h3>Combien c'est affiché</h3><div class="gros"><b>{k_euros(med) if med else "–"}</b><span>salaire annuel brut médian affiché, sur {len(sals)} offres qui donnent un montant (annualisé)</span></div>
 <div class="duo">{"".join(f'<div><b>{k_euros(v)}</b><span>médiane affichée en {c}</span></div>' for c, v in med_c.items())}<div><b>29 k€</b><span>repère IAE : 2 433 € brut par mois à un an</span></div></div>
 <p class="hint">Salaire moyen affiché par intitulé (k€ brut par an) :</p>{barres(sal_m, unite=" k€")}
-<p class="warn">Ce sont des salaires affichés dans les annonces, pas des salaires versés. Les offres seniors tirent la moyenne vers le haut : un premier poste se situe plutôt dans le bas de la fourchette.</p></div>
+<p class="warn">Ce sont des salaires affichés dans les annonces, pas des salaires versés. Ils sont certainement gonflés par le fait que la plupart des offres sont à Paris et en Île-de-France ({pct(n_idf, len(loc))} des offres), où les salaires sont plus hauts. Et ces postes sont généralement accessibles après quelques années d'expérience : un premier poste d'assistant chef de produit ou de chef de produit junior se situe plutôt dans le bas de la fourchette.</p></div>
 <div class="card"><h3>L'évolution du salaire moyen affiché</h3><p class="hint">Offres « chef de produit » sur Adzuna, moyenne mensuelle, en € brut par an.</p>{courbe(pts, unite=" €", zero=False)}
 {('<p class="hint">Répartition des ' + str(len(sals)) + ' offres qui affichent un salaire (brut annuel) :</p>' + barres(hist_l)) if sals else ""}</div></div>''')
 
@@ -496,11 +526,69 @@ def section_marche():
 
     # tableau des offres
     h.append(f'''<div class="card"><div class="carte-tete"><h3>Toutes les offres d'emploi</h3>{filtres}</div>
-<div class="outils-carte"><label class="recherche"><span class="sr">Chercher</span><input type="search" id="m-q" placeholder="Chercher un mot, une entreprise, une ville (ex. cosmétique, Lyon, junior)"></label><span class="hint" id="m-compte"></span></div>
+<div class="outils-carte"><label class="recherche"><span class="sr">Chercher</span><input type="search" id="m-q" placeholder="Chercher un mot, une entreprise, une ville (ex. assistant, Lyon, junior)"></label><span class="hint" id="m-compte"></span></div>
 <div class="tablebox"><table id="m-table"><thead><tr><th data-k="t">Intitulé</th><th data-k="e">Entreprise</th><th data-k="l">Lieu</th><th data-k="c">Contrat</th><th data-k="n" class="num">Salaire</th><th data-k="d" aria-sort="descending">Publiée</th><th data-k="src">Source</th></tr></thead><tbody id="m-corps"></tbody></table></div>
 <p class="suivant gauche"><button type="button" class="btn ghost" id="m-plus" hidden></button></p>
 <p class="hint">Cliquer sur un en-tête pour trier. Le salaire n'apparaît que s'il est écrit dans l'annonce.</p></div>''')
     return "".join(h)
+
+
+def section_sources(prive=False):
+    """Onglet « Sources » : canaux, requêtes exactes, références citées, méthode."""
+    canaux = [
+        ("Adzuna", "API publique, clé gratuite", "https://developer.adzuna.com/",
+         "Comptages par intitulé (stages, alternances, CDI, CDD), offres détaillées, salaires affichés, historique des salaires", "Veille quotidienne ; marché de l'emploi le 19 novembre 2026"),
+        ("La bonne alternance", "API de l'État, jeton gratuit", "https://api.apprentissage.beta.gouv.fr/",
+         "Offres d'alternance et entreprises qui recrutent sans publier d'offre", "Veille quotidienne"),
+        ("France Travail, Offres d'emploi v2", "API officielle, clé gratuite", "https://francetravail.io/data/api/offres-emploi",
+         "Prévue pour les offres du code ROME M1703 ; ne répondait pas pendant le projet", "Non utilisée dans les chiffres"),
+        ("Indeed", "Connecteur officiel Indeed (accord de l'enseignant)", "https://fr.indeed.com/",
+         "Offres d'emploi CDI et CDD en complément d'Adzuna, dont assistant chef de produit (10 résultats par recherche)", "19 novembre 2026"),
+        ("Recherche d'entreprises", "API data.gouv, sans clé", "https://recherche-entreprises.api.gouv.fr/",
+         "Base des entreprises du Puy-de-Dôme dans les secteurs qui gèrent des gammes", "Novembre 2026"),
+        ("Jooble", "API, clé sur demande", "https://fr.jooble.org/api/about",
+         "Offres complémentaires de la veille", "5 au 17 novembre 2026"),
+        ("Annonces lues en entier", "Lecture des annonces retenues", "",
+         "Missions, profil, gratification et date de début des annonces de stage et d'alternance", "Novembre 2026"),
+    ]
+    if prive:
+        canaux.append(("Mon tableau de suivi", "Saisie à la main (privé)", "", "Statut de chaque candidature", "En continu"))
+    refs = [
+        ("Cours « Séminaires métiers », IAE Clermont Auvergne : consignes et méthode", "https://metier.iae-mod.fr/"),
+        ("Grille d'évaluation du cours", "https://metier.iae-mod.fr/evaluation.html"),
+        ("Insertion des diplômés de l'IAE : 2 433 € brut médian par mois à un an, chiffre présenté à la rentrée 2026", ""),
+        ("Documentation de l'API Adzuna (paramètres title_only, what_exclude, permanent, contract, histogram, history)", "https://developer.adzuna.com/docs/search"),
+        ("Fiche ROME M1703 « Management et gestion de produit », France Travail", "https://candidat.francetravail.fr/metierscope/fiche-metier/M1703"),
+    ]
+    vus, notes = set(), []
+    for canal, requete, date, limites, fichier in SOURCES:
+        if isinstance(requete, dict):
+            requete = " · ".join(f"{k} = {v}" for k, v in requete.items())
+        if (canal, requete) in vus:
+            continue
+        vus.add((canal, requete))
+        notes.append(f'<tr><td><b>{e(canal)}</b></td><td><code>{e(requete)}</code></td><td class="nw">{e(fr_date(date)) if date else "–"}</td>'
+                     f'<td>{e(limites)}</td><td>{lien_data(fichier) if fichier else "–"}</td></tr>')
+    lien = lambda t, u: f'<a href="{e(u)}" target="_blank" rel="noopener">{e(t)}</a>' if u else e(t)
+    return "".join([
+        retenir("Chaque chiffre du site vient d'une source publique ou d'une annonce lue, avec la requête exacte et la date. "
+                "Les fichiers de données sont dans le dépôt GitHub, et les scripts permettent de tout relancer."),
+        '<div class="card"><h3>Les canaux de données</h3><div class="tablebox"><table><thead><tr><th>Canal</th><th>Accès</th><th>Ce que j\'en tire</th><th>Période</th></tr></thead><tbody>'
+        + "".join(f'<tr><td><b>{lien(n, u)}</b></td><td>{e(a)}</td><td>{e(q)}</td><td>{e(d)}</td></tr>' for n, a, u, q, d in canaux)
+        + '</tbody></table></div><p class="hint">Pas d\'aspiration de LinkedIn, de l\'APEC ni du site d\'Indeed : leurs conditions d\'utilisation l\'interdisent. Les offres Indeed viennent du connecteur officiel, avec l\'accord de l\'enseignant, parce que l\'API France Travail ne répondait pas.</p></div>',
+        '<div class="card"><h3>Chiffre par chiffre : requête, date, limites</h3><p class="hint">Une ligne par graphique ou chiffre clé du site. Le lien ouvre le fichier de données dans le dépôt.</p>'
+        '<div class="tablebox"><table class="sources-table"><thead><tr><th>Source</th><th>Requête exacte</th><th>Date</th><th>Limites</th><th>Fichier</th></tr></thead><tbody>'
+        + "".join(notes) + '</tbody></table></div></div>',
+        '<div class="grid2"><div class="card"><h3>Références citées</h3><ul class="refs">' + "".join(f'<li>{lien(t, u)}</li>' for t, u in refs) + '</ul></div>'
+        f'<div class="card"><h3>Méthode et reproductibilité</h3><ul class="refs">'
+        f'<li>Code et données : <a href="{DEPOT}" target="_blank" rel="noopener">{DEPOT.replace("https://", "")}</a></li>'
+        '<li><code>scripts/collecte.py</code> : veille quotidienne (Adzuna, La bonne alternance, France Travail)</li>'
+        '<li><code>scripts/marche.py</code> : marché de l\'emploi CDI et CDD (Adzuna)</li>'
+        '<li><code>scripts/entreprises.py</code> : entreprises du Puy-de-Dôme</li>'
+        '<li><code>scripts/site.py</code> : relit les données et écrit cette page</li>'
+        '<li>Chaque matin, une GitHub Action relance la collecte ; l\'historique Git garde chaque extraction datée.</li>'
+        '<li>Les clés d\'API sont rangées dans les secrets du dépôt, jamais dans le code.</li></ul></div></div>',
+    ])
 
 
 def construire():
@@ -728,7 +816,8 @@ def construire():
     if not suivi:
         sections = sections[:3]
         SOURCES[:] = [x for x in SOURCES if "suivi" not in x[0]]
-    courts = {"offres": "Les offres", "competences": "Les attentes des recruteurs", "acteurs": "Où candidater", "actions": "Où j'en suis"}
+    sections.append(("sources", str(len(sections) + 1), "Sources", section_sources(bool(suivi))))
+    courts = {"offres": "Les offres", "competences": "Les attentes des recruteurs", "acteurs": "Où candidater", "actions": "Où j'en suis", "sources": "Sources"}
     onglets = [("accueil", "Accueil")] + [(i, courts[i]) for i, *_ in sections]
     nav = "".join(f'<a href="#{i}" data-onglet="{i}">{t}</a>' for i, t in onglets)
     def suivant(i):
@@ -760,7 +849,7 @@ def construire():
 </section>
 {corps}
 </main>
-<footer><div class="in">{note_sources()}<p>Les offres sont collectées automatiquement chaque matin (France Travail, Adzuna, La bonne alternance, annuaire des entreprises). Données et méthode : <a href="{DEPOT}">{DEPOT.replace("https://", "")}</a>.</p></div></footer>
+<footer><div class="in"><p>Toutes les sources, requêtes et limites : <a href="#sources">onglet Sources</a>. Les offres sont collectées automatiquement chaque matin (France Travail, Adzuna, La bonne alternance, annuaire des entreprises). Données et méthode : <a href="{DEPOT}">{DEPOT.replace("https://", "")}</a>.</p></div></footer>
 <script src="assets/onglets.js"></script>
 <script src="assets/carte.js"></script>
 <script src="assets/marche.js"></script>

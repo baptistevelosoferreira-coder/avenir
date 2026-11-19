@@ -537,3 +537,9 @@ h3.sous.gros-titre:first-child { margin-top: 4px; }
 .hb .bar.pile span.sg.cdi { background: #2f8f57; }
 .hb .bar.pile span.sg.cdd { background: #f3b33d; }
 .legende-pile i.sg.cdi { background: #2f8f57; } .legende-pile i.sg.cdd { background: #f3b33d; } .legende-pile i.sg.np { background: #b9c9bf; }
+/* onglet Sources */
+.sources-table code{font-size:.78rem;white-space:normal;word-break:break-word}
+.sources-table td{vertical-align:top;font-size:.86rem}
+ul.refs{margin:.4rem 0 0;padding-left:1.1rem;line-height:1.6}
+ul.refs li{margin:.25rem 0}
+.card.zoom .grid2{margin:1rem 0}
