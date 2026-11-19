@@ -534,62 +534,16 @@ def section_marche():
 
 
 def section_sources(prive=False):
-    """Onglet « Sources » : canaux, requêtes exactes, références citées, méthode."""
-    canaux = [
-        ("Adzuna", "API publique, clé gratuite", "https://developer.adzuna.com/",
-         "Comptages par intitulé (stages, alternances, CDI, CDD), offres détaillées, salaires affichés, historique des salaires", "Veille quotidienne ; marché de l'emploi le 19 novembre 2026"),
-        ("La bonne alternance", "API de l'État, jeton gratuit", "https://api.apprentissage.beta.gouv.fr/",
-         "Offres d'alternance et entreprises qui recrutent sans publier d'offre", "Veille quotidienne"),
-        ("France Travail, Offres d'emploi v2", "API officielle, clé gratuite", "https://francetravail.io/data/api/offres-emploi",
-         "Prévue pour les offres du code ROME M1703 ; ne répondait pas pendant le projet", "Non utilisée dans les chiffres"),
-        ("Indeed", "Connecteur officiel Indeed (accord de l'enseignant)", "https://fr.indeed.com/",
-         "Offres d'emploi CDI et CDD en complément d'Adzuna, dont assistant chef de produit (10 résultats par recherche)", "19 novembre 2026"),
-        ("Recherche d'entreprises", "API data.gouv, sans clé", "https://recherche-entreprises.api.gouv.fr/",
-         "Base des entreprises du Puy-de-Dôme dans les secteurs qui gèrent des gammes", "Novembre 2026"),
-        ("Jooble", "API, clé sur demande", "https://fr.jooble.org/api/about",
-         "Offres complémentaires de la veille", "5 au 17 novembre 2026"),
-        ("Annonces lues en entier", "Lecture des annonces retenues", "",
-         "Missions, profil, gratification et date de début des annonces de stage et d'alternance", "Novembre 2026"),
+    """Onglet « Sources » : les trois sources citées."""
+    srcs = [
+        ("Adzuna", "https://www.adzuna.fr/", "Agrégateur d'offres d'emploi, interrogé par son API publique : offres de stage, d'alternance, de CDI et de CDD, comptages par intitulé, salaires affichés."),
+        ("Jooble", "https://fr.jooble.org/", "Agrégateur d'offres d'emploi, interrogé par son API : offres complémentaires de stage et d'alternance."),
+        ("Fiche ROME M1703 « Management et gestion de produit », France Travail", "https://candidat.francetravail.fr/metierscope/fiche-metier/M1703",
+         "Fiche métier du chef de produit : missions, compétences et accès au métier."),
     ]
-    if prive:
-        canaux.append(("Mon tableau de suivi", "Saisie à la main (privé)", "", "Statut de chaque candidature", "En continu"))
-    refs = [
-        ("Cours « Séminaires métiers », IAE Clermont Auvergne : consignes et méthode", "https://metier.iae-mod.fr/"),
-        ("Grille d'évaluation du cours", "https://metier.iae-mod.fr/evaluation.html"),
-        ("Insertion des diplômés de l'IAE : 2 433 € brut médian par mois à un an, chiffre présenté à la rentrée 2026", ""),
-        ("Documentation de l'API Adzuna (paramètres title_only, what_exclude, permanent, contract, histogram, history)", "https://developer.adzuna.com/docs/search"),
-        ("Fiche ROME M1703 « Management et gestion de produit », France Travail", "https://candidat.francetravail.fr/metierscope/fiche-metier/M1703"),
-    ]
-    vus, notes = set(), []
-    for canal, requete, date, limites, fichier in SOURCES:
-        if isinstance(requete, dict):
-            requete = " · ".join(f"{k} = {v}" for k, v in requete.items())
-        if (canal, requete) in vus:
-            continue
-        vus.add((canal, requete))
-        notes.append(f'<tr><td><b>{e(canal)}</b></td><td><code>{e(requete)}</code></td><td class="nw">{e(fr_date(date)) if date else "–"}</td>'
-                     f'<td>{e(limites)}</td><td>{lien_data(fichier) if fichier else "–"}</td></tr>')
-    lien = lambda t, u: f'<a href="{e(u)}" target="_blank" rel="noopener">{e(t)}</a>' if u else e(t)
-    return "".join([
-        retenir("Chaque chiffre du site vient d'une source publique ou d'une annonce lue, avec la requête exacte et la date. "
-                "Les fichiers de données sont dans le dépôt GitHub, et les scripts permettent de tout relancer."),
-        '<div class="card"><h3>Les canaux de données</h3><div class="tablebox"><table><thead><tr><th>Canal</th><th>Accès</th><th>Ce que j\'en tire</th><th>Période</th></tr></thead><tbody>'
-        + "".join(f'<tr><td><b>{lien(n, u)}</b></td><td>{e(a)}</td><td>{e(q)}</td><td>{e(d)}</td></tr>' for n, a, u, q, d in canaux)
-        + '</tbody></table></div><p class="hint">Pas d\'aspiration de LinkedIn, de l\'APEC ni du site d\'Indeed : leurs conditions d\'utilisation l\'interdisent. Les offres Indeed viennent du connecteur officiel, avec l\'accord de l\'enseignant, parce que l\'API France Travail ne répondait pas.</p></div>',
-        '<div class="card"><h3>Chiffre par chiffre : requête, date, limites</h3><p class="hint">Une ligne par graphique ou chiffre clé du site. Le lien ouvre le fichier de données dans le dépôt.</p>'
-        '<div class="tablebox"><table class="sources-table"><thead><tr><th>Source</th><th>Requête exacte</th><th>Date</th><th>Limites</th><th>Fichier</th></tr></thead><tbody>'
-        + "".join(notes) + '</tbody></table></div></div>',
-        '<div class="grid2"><div class="card"><h3>Références citées</h3><ul class="refs">' + "".join(f'<li>{lien(t, u)}</li>' for t, u in refs) + '</ul></div>'
-        f'<div class="card"><h3>Méthode et reproductibilité</h3><ul class="refs">'
-        f'<li>Code et données : <a href="{DEPOT}" target="_blank" rel="noopener">{DEPOT.replace("https://", "")}</a></li>'
-        '<li><code>scripts/collecte.py</code> : veille quotidienne (Adzuna, La bonne alternance, France Travail)</li>'
-        '<li><code>scripts/marche.py</code> : marché de l\'emploi CDI et CDD (Adzuna)</li>'
-        '<li><code>scripts/entreprises.py</code> : entreprises du Puy-de-Dôme</li>'
-        '<li><code>scripts/site.py</code> : relit les données et écrit cette page</li>'
-        '<li>Chaque matin, une GitHub Action relance la collecte ; l\'historique Git garde chaque extraction datée.</li>'
-        '<li>Les clés d\'API sont rangées dans les secrets du dépôt, jamais dans le code.</li></ul></div></div>',
-    ])
-
+    return ('<div class="card"><h3>Sources</h3><ul class="refs">'
+            + "".join(f'<li><a href="{e(u)}" target="_blank" rel="noopener"><b>{e(n)}</b></a><br><span class="hint">{e(d)}</span></li>' for n, u, d in srcs)
+            + "</ul></div>")
 
 def construire():
     contenu = lire_json(os.path.join(RACINE, "contenu.json"), {})
@@ -849,7 +803,7 @@ def construire():
 </section>
 {corps}
 </main>
-<footer><div class="in"><p>Toutes les sources, requêtes et limites : <a href="#sources">onglet Sources</a>. Les offres sont collectées automatiquement chaque matin (France Travail, Adzuna, La bonne alternance, annuaire des entreprises). Données et méthode : <a href="{DEPOT}">{DEPOT.replace("https://", "")}</a>.</p></div></footer>
+<footer><div class="in"><p>Sources : <a href="#sources">onglet Sources</a>.</p></div></footer>
 <script src="assets/onglets.js"></script>
 <script src="assets/carte.js"></script>
 <script src="assets/marche.js"></script>
