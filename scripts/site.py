@@ -331,7 +331,7 @@ def retenir(txt):
 
 
 def section_marche():
-    fichiers = sorted(glob.glob(os.path.join(DATA, "marche", "*-*-*.json")))
+    fichiers = sorted(f for f in glob.glob(os.path.join(DATA, "marche", "*.json")) if re.match(r"\d{4}-\d{2}-\d{2}\.json$", os.path.basename(f)))
     if not fichiers:
         return ""
     M = lire_json(fichiers[-1], {})
@@ -353,11 +353,11 @@ def section_marche():
         offres.append({"t": r["intitule"], "e": r["entreprise"], "l": r["lieu"], "reg": r["region"], "c": c, "d": r["date_publication"],
                        "sal": sal, "x": norm(r["extrait"]), "u": r["url"], "src": "Adzuna", "dep": r.get("departement", ""), "m": r.get("metier") or "chef de produit"})
     n_adz = len(offres)
-    # Indeed (version privée seulement : annonces non republiées dans le dépôt public)
+    # Indeed (recherches faites avec le connecteur Indeed, autorisé par l'enseignant car l'API France Travail ne répond pas)
     n_ind = 0
-    if PRIVE:
+    if True:
         vus = {(norm(o["t"]), norm(o["e"])) for o in offres}
-        for f in sorted(glob.glob(os.path.join(PRIVE, "indeed", "*.json"))):
+        for f in sorted(glob.glob(os.path.join(DATA, "marche", "indeed_*.json"))):
             for r in lire_json(f, []):
                 t = norm(r["intitule"])
                 if re.search(exclu, t) or re.search(r"stage|appren|internship", norm(r["type"])) or not re.search(PERTINENT, t):
@@ -432,7 +432,7 @@ def section_marche():
 <script type="application/json" id="donnees-marche">{js}</script></div>''')
     source("Adzuna (API), marché de l'emploi", "title_only = <métier> · what_exclude = stage, stagiaire, internship, alternance, alternant, apprentissage, apprenti · max_days_old = 60 · permanent = 1 (CDI) ou contract = 1 (CDD)", jour, M.get("limites", ""), f"data/marche/{os.path.basename(fichiers[-1])}")
     if n_ind:
-        source("Indeed (recherche d'offres)", "chef de produit, chef de gamme, chef de marque, product marketing manager · plusieurs villes · temps plein ou CDD", "2026-11-19", "Échantillon : 10 résultats par recherche, sans total ni salaire. Gardé hors du dépôt public.")
+        source("Indeed (recherche d'offres)", "chef de produit, chef de gamme, chef de marque, product marketing manager · plusieurs villes · temps plein ou CDD", "2026-11-19", "Recherches faites avec le connecteur officiel Indeed (pas d'aspiration du site), avec l'accord de l'enseignant car l'API France Travail ne répondait pas. Échantillon : 10 résultats par recherche, sans total ni salaire ; les doublons avec Adzuna sont retirés.", "data/marche/indeed_2026-11-19.json")
 
     # métiers : CDI / CDD / non précisé
     noms_m = {"chef de produit": "Chef de produit", "chef de gamme": "Chef de gamme", "chef de marque": "Chef de marque", "brand manager": "Brand manager",
