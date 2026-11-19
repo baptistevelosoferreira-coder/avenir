@@ -27,7 +27,7 @@ Chaque graphique a un bloc « Source » qui donne le canal, la requête exacte, 
 | Recherche d'entreprises | API data.gouv, sans clé | Base des entreprises du Puy-de-Dôme dans les secteurs qui gèrent des gammes |
 | Jooble | API, clé sur demande | Offres complémentaires de la veille du 5 au 17 novembre |
 
-Pas d'aspiration de LinkedIn, de l'APEC ni d'Indeed : leurs conditions d'utilisation l'interdisent.
+Pas d'aspiration de LinkedIn, de l'APEC ni d'Indeed : leurs conditions d'utilisation l'interdisent. Les offres Indeed de `data/marche/indeed_2026-11-19.json` viennent de recherches faites avec le connecteur officiel Indeed (10 résultats par recherche), avec l'accord de l'enseignant, parce que l'API France Travail ne répondait pas.
 
 ## Les fichiers
 
