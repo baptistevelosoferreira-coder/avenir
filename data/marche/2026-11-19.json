@@ -1,0 +1,463 @@
+{
+ "date": "2026-11-19",
+ "canal": "Adzuna",
+ "limites": "Adzuna agrège les offres de nombreux sites (une offre publiée plusieurs fois compte une fois), mais ne voit pas tout le marché. Comptage sur l'intitulé, offres des 60 derniers jours, stages et alternances exclus. Le type de contrat n'est pas renseigné sur toutes les offres.",
+ "jours": 60,
+ "comptages": [
+  {
+   "metier": "chef de produit",
+   "contrat": "tous",
+   "valeur": 380,
+   "salaire_moyen": 45167.61,
+   "requete": {
+    "title_only": "chef de produit",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60
+   }
+  },
+  {
+   "metier": "chef de produit",
+   "contrat": "CDI",
+   "valeur": 179,
+   "salaire_moyen": 45447.37,
+   "requete": {
+    "title_only": "chef de produit",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60,
+    "permanent": 1
+   }
+  },
+  {
+   "metier": "chef de produit",
+   "contrat": "CDD",
+   "valeur": 31,
+   "salaire_moyen": 39840.92,
+   "requete": {
+    "title_only": "chef de produit",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60,
+    "contract": 1
+   }
+  },
+  {
+   "metier": "chef de gamme",
+   "contrat": "tous",
+   "valeur": 15,
+   "salaire_moyen": 43428.57,
+   "requete": {
+    "title_only": "chef de gamme",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60
+   }
+  },
+  {
+   "metier": "chef de gamme",
+   "contrat": "CDI",
+   "valeur": 10,
+   "salaire_moyen": 38800,
+   "requete": {
+    "title_only": "chef de gamme",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60,
+    "permanent": 1
+   }
+  },
+  {
+   "metier": "chef de gamme",
+   "contrat": "CDD",
+   "valeur": 0,
+   "salaire_moyen": null,
+   "requete": {
+    "title_only": "chef de gamme",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60,
+    "contract": 1
+   }
+  },
+  {
+   "metier": "chef de marque",
+   "contrat": "tous",
+   "valeur": 8,
+   "salaire_moyen": 47333.33,
+   "requete": {
+    "title_only": "chef de marque",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60
+   }
+  },
+  {
+   "metier": "chef de marque",
+   "contrat": "CDI",
+   "valeur": 2,
+   "salaire_moyen": 50000,
+   "requete": {
+    "title_only": "chef de marque",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60,
+    "permanent": 1
+   }
+  },
+  {
+   "metier": "chef de marque",
+   "contrat": "CDD",
+   "valeur": 2,
+   "salaire_moyen": 42000,
+   "requete": {
+    "title_only": "chef de marque",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60,
+    "contract": 1
+   }
+  },
+  {
+   "metier": "brand manager",
+   "contrat": "tous",
+   "valeur": 30,
+   "salaire_moyen": 57278.57,
+   "requete": {
+    "title_only": "brand manager",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60
+   }
+  },
+  {
+   "metier": "brand manager",
+   "contrat": "CDI",
+   "valeur": 4,
+   "salaire_moyen": 55500,
+   "requete": {
+    "title_only": "brand manager",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60,
+    "permanent": 1
+   }
+  },
+  {
+   "metier": "brand manager",
+   "contrat": "CDD",
+   "valeur": 4,
+   "salaire_moyen": null,
+   "requete": {
+    "title_only": "brand manager",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60,
+    "contract": 1
+   }
+  },
+  {
+   "metier": "product marketing",
+   "contrat": "tous",
+   "valeur": 29,
+   "salaire_moyen": 65071.43,
+   "requete": {
+    "title_only": "product marketing",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60
+   }
+  },
+  {
+   "metier": "product marketing",
+   "contrat": "CDI",
+   "valeur": 9,
+   "salaire_moyen": 49666.67,
+   "requete": {
+    "title_only": "product marketing",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60,
+    "permanent": 1
+   }
+  },
+  {
+   "metier": "product marketing",
+   "contrat": "CDD",
+   "valeur": 3,
+   "salaire_moyen": 80500,
+   "requete": {
+    "title_only": "product marketing",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60,
+    "contract": 1
+   }
+  },
+  {
+   "metier": "marketing produit",
+   "contrat": "tous",
+   "valeur": 34,
+   "salaire_moyen": 44916.67,
+   "requete": {
+    "title_only": "marketing produit",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60
+   }
+  },
+  {
+   "metier": "marketing produit",
+   "contrat": "CDI",
+   "valeur": 17,
+   "salaire_moyen": 47750,
+   "requete": {
+    "title_only": "marketing produit",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60,
+    "permanent": 1
+   }
+  },
+  {
+   "metier": "marketing produit",
+   "contrat": "CDD",
+   "valeur": 4,
+   "salaire_moyen": null,
+   "requete": {
+    "title_only": "marketing produit",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60,
+    "contract": 1
+   }
+  },
+  {
+   "metier": "category manager",
+   "contrat": "tous",
+   "valeur": 81,
+   "salaire_moyen": 46588.24,
+   "requete": {
+    "title_only": "category manager",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60
+   }
+  },
+  {
+   "metier": "category manager",
+   "contrat": "CDI",
+   "valeur": 30,
+   "salaire_moyen": 45750,
+   "requete": {
+    "title_only": "category manager",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60,
+    "permanent": 1
+   }
+  },
+  {
+   "metier": "category manager",
+   "contrat": "CDD",
+   "valeur": 14,
+   "salaire_moyen": 41100,
+   "requete": {
+    "title_only": "category manager",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60,
+    "contract": 1
+   }
+  },
+  {
+   "metier": "chef de projet marketing",
+   "contrat": "tous",
+   "valeur": 58,
+   "salaire_moyen": 47562.5,
+   "requete": {
+    "title_only": "chef de projet marketing",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60
+   }
+  },
+  {
+   "metier": "chef de projet marketing",
+   "contrat": "CDI",
+   "valeur": 19,
+   "salaire_moyen": 42600,
+   "requete": {
+    "title_only": "chef de projet marketing",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60,
+    "permanent": 1
+   }
+  },
+  {
+   "metier": "chef de projet marketing",
+   "contrat": "CDD",
+   "valeur": 19,
+   "salaire_moyen": 54600,
+   "requete": {
+    "title_only": "chef de projet marketing",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60,
+    "contract": 1
+   }
+  },
+  {
+   "metier": "trade marketing",
+   "contrat": "tous",
+   "valeur": 32,
+   "salaire_moyen": 38416.67,
+   "requete": {
+    "title_only": "trade marketing",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60
+   }
+  },
+  {
+   "metier": "trade marketing",
+   "contrat": "CDI",
+   "valeur": 13,
+   "salaire_moyen": 37500,
+   "requete": {
+    "title_only": "trade marketing",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60,
+    "permanent": 1
+   }
+  },
+  {
+   "metier": "trade marketing",
+   "contrat": "CDD",
+   "valeur": 4,
+   "salaire_moyen": 42500,
+   "requete": {
+    "title_only": "trade marketing",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60,
+    "contract": 1
+   }
+  },
+  {
+   "metier": "chef de produit",
+   "contrat": "tous",
+   "valeur": 10,
+   "salaire_moyen": null,
+   "requete": {
+    "title_only": "chef de produit",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60,
+    "what_and": "junior"
+   },
+   "filtre": {
+    "what_and": "junior"
+   }
+  },
+  {
+   "metier": "chef de produit",
+   "contrat": "tous",
+   "valeur": 34,
+   "salaire_moyen": 47187.5,
+   "requete": {
+    "title_only": "chef de produit",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60,
+    "what_and": "senior"
+   },
+   "filtre": {
+    "what_and": "senior"
+   }
+  },
+  {
+   "metier": "chef de produit",
+   "contrat": "tous",
+   "valeur": 42,
+   "salaire_moyen": 48136.36,
+   "requete": {
+    "title_only": "chef de produit",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60,
+    "what_and": "confirmé"
+   },
+   "filtre": {
+    "what_and": "confirmé"
+   }
+  },
+  {
+   "metier": "chef de produit",
+   "contrat": "tous",
+   "valeur": 22,
+   "salaire_moyen": 38700,
+   "requete": {
+    "title_only": "chef de produit",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60,
+    "what_and": "assistant"
+   },
+   "filtre": {
+    "what_and": "assistant"
+   }
+  },
+  {
+   "metier": "chef de produit",
+   "contrat": "tous",
+   "valeur": 134,
+   "salaire_moyen": 46608.11,
+   "requete": {
+    "title_only": "chef de produit",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60,
+    "what_and": "international"
+   },
+   "filtre": {
+    "what_and": "international"
+   }
+  },
+  {
+   "metier": "chef de produit",
+   "contrat": "tous",
+   "valeur": 63,
+   "salaire_moyen": 51237.5,
+   "requete": {
+    "title_only": "chef de produit",
+    "what_exclude": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 60,
+    "what_and": "digital"
+   },
+   "filtre": {
+    "what_and": "digital"
+   }
+  }
+ ],
+ "stats": {
+  "salaires_tous_contrats": {
+   "requete": {
+    "endpoint": "histogram",
+    "what": "chef de produit"
+   },
+   "donnees": {
+    "histogram": {
+     "70000": 6,
+     "30000": 61,
+     "20000": 19,
+     "50000": 50,
+     "40000": 112,
+     "60000": 11,
+     "10000": 9
+    },
+    "__CLASS__": "Adzuna::API::Response::SalaryHistogram"
+   }
+  },
+  "historique": {
+   "requete": {
+    "endpoint": "history",
+    "what": "chef de produit",
+    "months": 24
+   },
+   "donnees": {
+    "what": "chef de produit",
+    "__CLASS__": "Adzuna::API::Response::HistoricalSalary",
+    "month": {
+     "2026-06": 41237.09,
+     "2026-10": 44355.99,
+     "2026-08": 43035.27,
+     "2026-01": 40660.66,
+     "2025-11": 41954.97,
+     "2026-05": 40960.34,
+     "2026-04": 40218,
+     "2026-02": 40832.13,
+     "2026-07": 41145.16,
+     "2026-03": 42111.89,
+     "2025-12": 42429.78,
+     "2026-09": 43156.96
+    }
+   }
+  }
+ },
+ "stage_alternance_chef_de_produit": 309,
+ "offres_detaillees": 598,
+ "journal": [
+  "salaires_cdi : 400 Client Error: Bad Request for url: https://api.adzuna.com/v1/api/jobs/fr/histogram?what=chef+de+produit&permanent=1&app_id=***&app_key=***"
+ ]
+}
