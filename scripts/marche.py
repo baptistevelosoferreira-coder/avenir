@@ -66,7 +66,7 @@ def main():
     def nb(metier, contrat=None, **extra):
         p = {"title_only": metier, "what_exclude": EXCLU, "max_days_old": JOURS, "results_per_page": 1, **extra}
         if contrat:
-            p["contract_type"] = contrat
+            p[contrat] = 1  # Adzuna : permanent=1 (CDI) ou contract=1 (CDD)
         try:
             d = get("search/1", **p)
             v = d.get("count", 0)
@@ -95,25 +95,17 @@ def main():
         nb("chef de produit", None, what_and=mot)
 
     # 4. Statistiques Adzuna
+    # (geodata, histogram et top_companies n'acceptent pas what_exclude : les régions et les entreprises
+    #  sont donc calculées sur les offres détaillées ; l'histogramme inclut les stages)
     for nom, chemin, p in [
-        ("regions", "geodata", {"what": "chef de produit", "what_exclude": EXCLU, "location0": "France"}),
-        ("regions_cdi", "geodata", {"what": "chef de produit", "what_exclude": EXCLU, "location0": "France", "contract_type": "permanent"}),
-        ("salaires", "histogram", {"what": "chef de produit", "what_exclude": EXCLU}),
-        ("salaires_cdi", "histogram", {"what": "chef de produit", "what_exclude": EXCLU, "contract_type": "permanent"}),
+        ("salaires_tous_contrats", "histogram", {"what": "chef de produit"}),
+        ("salaires_cdi", "histogram", {"what": "chef de produit", "permanent": 1}),
         ("historique", "history", {"what": "chef de produit", "months": 24}),
-        ("entreprises", "top_companies", {"what": "chef de produit", "what_exclude": EXCLU}),
     ]:
         try:
             out["stats"][nom] = {"requete": {"endpoint": chemin, **p}, "donnees": get(chemin, **p)}
         except Exception as ex:
             log(f"{nom} : {ex}")
-    # Départements des 2 premières régions et d'Auvergne-Rhône-Alpes
-    for reg in ["Ile-de-France", "Auvergne-Rhône-Alpes"]:
-        try:
-            out["stats"]["dep_" + reg] = {"requete": {"endpoint": "geodata", "what": "chef de produit", "location0": "France", "location1": reg},
-                                          "donnees": get("geodata", what="chef de produit", what_exclude=EXCLU, location0="France", location1=reg)}
-        except Exception as ex:
-            log(f"départements {reg} : {ex}")
 
     # 5. Offres détaillées (intitulé « chef de produit », 60 jours, au plus 10 pages de 50)
     offres = []
@@ -136,11 +128,33 @@ def main():
                 "salaire_min": x.get("salary_min"), "salaire_max": x.get("salary_max"),
                 "salaire_estime": x.get("salary_is_predicted"), "categorie": (x.get("category") or {}).get("label", ""),
                 "extrait": propre(x.get("description"), 700), "latitude": x.get("latitude"), "longitude": x.get("longitude"),
-                "url": (x.get("redirect_url") or "").split("?")[0],
+                "url": (x.get("redirect_url") or "").split("?")[0], "metier": "chef de produit",
             })
         if len(res) < 50:
             break
-    champs = ["id", "date_publication", "intitule", "entreprise", "lieu", "region", "departement", "contrat", "temps",
+    for m in METIERS[1:]:
+        try:
+            d = get("search/1", title_only=m, what_exclude=EXCLU, max_days_old=JOURS, results_per_page=50, sort_by="date")
+        except Exception as ex:
+            log(f"offres {m} : {ex}")
+            continue
+        vus = {o["id"] for o in offres}
+        for x in d.get("results", []):
+            if x.get("id") in vus:
+                continue
+            loc = x.get("location") or {}
+            area = loc.get("area") or []
+            offres.append({
+                "id": x.get("id"), "date_publication": (x.get("created") or "")[:10], "intitule": propre(x.get("title")),
+                "entreprise": propre((x.get("company") or {}).get("display_name")), "lieu": loc.get("display_name", ""),
+                "region": area[1] if len(area) > 1 else "", "departement": area[2] if len(area) > 2 else "",
+                "contrat": CONTRATS.get(x.get("contract_type") or "", ""), "temps": x.get("contract_time", ""),
+                "salaire_min": x.get("salary_min"), "salaire_max": x.get("salary_max"),
+                "salaire_estime": x.get("salary_is_predicted"), "categorie": (x.get("category") or {}).get("label", ""),
+                "extrait": propre(x.get("description"), 700), "latitude": x.get("latitude"), "longitude": x.get("longitude"),
+                "url": (x.get("redirect_url") or "").split("?")[0], "metier": m,
+            })
+    champs = ["metier", "id", "date_publication", "intitule", "entreprise", "lieu", "region", "departement", "contrat", "temps",
               "salaire_min", "salaire_max", "salaire_estime", "categorie", "extrait", "latitude", "longitude", "url"]
     with open(os.path.join(SORTIE, f"{AUJ}_offres.csv"), "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=champs)
