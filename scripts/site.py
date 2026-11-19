@@ -196,22 +196,25 @@ def carte(groupes, titre):
     return "".join(s)
 
 
-def courbe(points, hauteur=170, largeur=640, unite="", libelles=None):
+def courbe(points, hauteur=170, largeur=640, unite="", libelles=None, zero=True):
     """points : liste (date_iso, valeur) ; ligne simple avec points et étiquettes."""
     if not points:
         return '<p class="vide">Pas encore de données.</p>'
     vals = [v for _, v in points]
     vmax = max(vals) * 1.15 or 1
+    vmin = 0 if zero else math.floor(min(vals) * 0.9 / 1000) * 1000
+    if not zero:
+        vmax = math.ceil(max(vals) * 1.05 / 1000) * 1000
     g, d, h, b = 40, 12, 14, 26
     W, H = largeur - g - d, hauteur - h - b
     x = lambda i: g + (W * i / max(1, len(points) - 1))
-    y = lambda v: h + H - H * v / vmax
+    y = lambda v: h + H - H * (v - vmin) / ((vmax - vmin) or 1)
     s = [f'<svg class="line" viewBox="0 0 {largeur} {hauteur}" role="img">']
     for k in range(0, 5):
-        vv = vmax * k / 4
+        vv = vmin + (vmax - vmin) * k / 4
         s.append(f'<line class="grid" x1="{g}" x2="{largeur - d}" y1="{y(vv):.1f}" y2="{y(vv):.1f}"/><text class="ax" x="{g - 6}" y="{y(vv) + 4:.1f}" text-anchor="end">{nombre(round(vv))}</text>')
     pts = " ".join(f"{x(i):.1f},{y(v):.1f}" for i, (_, v) in enumerate(points))
-    s.append(f'<polygon class="area" points="{g},{y(0):.1f} {pts} {x(len(points) - 1):.1f},{y(0):.1f}"/><polyline class="ln" points="{pts}"/>')
+    s.append(f'<polygon class="area" points="{g},{y(vmin):.1f} {pts} {x(len(points) - 1):.1f},{y(vmin):.1f}"/><polyline class="ln" points="{pts}"/>')
     pas = max(1, math.ceil(len(points) / 7))
     for i, (dte, v) in enumerate(points):
         s.append(f'<circle class="pt" cx="{x(i):.1f}" cy="{y(v):.1f}" r="3.2"><title>{fr_date(dte)} : {nombre(v)}{unite}</title></circle>')
@@ -284,6 +287,221 @@ def famille_intitule(t):
 
 
 # ------------------------------------------------------------------ construction
+
+# ------------------------------------------------------------------ « Et après » : marché CDI / CDD
+
+PERTINENT = r"chef(fe|\.fe|\(fe\)|\.e|·fe)?s? (de )?(projet marketing|projets? marketing|produits?|gamme|marque)|product (marketing )?manager|brand manager|category manager|marketing produit|trade marketing|chef de marche"
+CABINETS = r"michael page|page personnel|hays|robert (walters|half)|adecco|randstad|manpower|marvesting|sintel|jd consultants|ropsi|talents commerciaux|experiences|enalees|reisel|france travail|hellowork|recrutement|interim|cabinet|consult|direct emploi|search|school|ecole|emploi|talent|rh\\b|^$"
+EN_MOIS = {m: i + 1 for i, m in enumerate(["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"])}
+
+
+def salaire_annuel(mn, mx):
+    try:
+        mn, mx = float(mn or 0), float(mx or 0)
+    except ValueError:
+        return None
+    v = (mn + mx) / 2 if mn and mx else (mn or mx)
+    if not v:
+        return None
+    if v < 200:          # horaire
+        v *= 151.67 * 12
+    elif v < 10000:      # mensuel
+        v *= 12
+    return v if 18000 <= v <= 150000 else None
+
+
+def k_euros(v):
+    return f"{nombre(round(v / 1000))} k€"
+
+
+def barres_empilees(lignes, cles, noms):
+    """lignes : (libellé, {clé: valeur}) ; une barre par ligne, segments par clé."""
+    maxi = max(sum(d.values()) for _, d in lignes) or 1
+    out = []
+    for lab, d in lignes:
+        tot = sum(d.values())
+        seg = "".join(f'<span class="sg {k}" style="width:{100 * d.get(k, 0) / maxi:.2f}%" title="{e(noms[k])} : {d.get(k, 0)}"></span>' for k in cles if d.get(k))
+        out.append(f'<div class="hb"><div class="lab">{lab}</div><div class="bar pile">{seg}</div><div class="val">{nombre(tot)}</div></div>')
+    leg = "".join(f'<span><i class="sg {k}"></i>{e(noms[k])}</span>' for k in cles)
+    return f'<div class="hbars">{"".join(out)}</div><p class="legende-pile">{leg}</p>'
+
+
+def retenir(txt):
+    return f'<p class="retenir"><b>À retenir</b>{txt}</p>'
+
+
+def section_marche():
+    fichiers = sorted(glob.glob(os.path.join(DATA, "marche", "*-*-*.json")))
+    if not fichiers:
+        return ""
+    M = lire_json(fichiers[-1], {})
+    jour = M.get("date", "")
+    csvp = fichiers[-1].replace(".json", "_offres.csv")
+    brutes = lire_csv(csvp) if os.path.exists(csvp) else []
+    comptes = M.get("comptages", [])
+    cpt = lambda metier, contrat="tous", filtre=None: next((c for c in comptes if c["metier"] == metier and c["contrat"] == contrat and c.get("filtre") == filtre), {})
+    exclu = r"stage|stagiaire|altern|apprenti|internship|v\.?i\.?e\b"
+
+    # offres détaillées, nettoyées
+    offres = []
+    for r in brutes:
+        t = norm(r["intitule"])
+        if not re.search(PERTINENT, t) or re.search(exclu, t):
+            continue
+        sal = salaire_annuel(r["salaire_min"], r["salaire_max"]) if str(r.get("salaire_estime")) not in ("1", "True") else None
+        c = r["contrat"] or ("CDI" if re.search(r"\bcdi\b", t + " " + norm(r["extrait"])) else "CDD" if re.search(r"\bcdd\b", t) else "")
+        offres.append({"t": r["intitule"], "e": r["entreprise"], "l": r["lieu"], "reg": r["region"], "c": c, "d": r["date_publication"],
+                       "sal": sal, "x": norm(r["extrait"]), "u": r["url"], "src": "Adzuna", "dep": r.get("departement", ""), "m": r.get("metier") or "chef de produit"})
+    n_adz = len(offres)
+    # Indeed (version privée seulement : annonces non republiées dans le dépôt public)
+    n_ind = 0
+    if PRIVE:
+        vus = {(norm(o["t"]), norm(o["e"])) for o in offres}
+        for f in sorted(glob.glob(os.path.join(PRIVE, "indeed", "*.json"))):
+            for r in lire_json(f, []):
+                t = norm(r["intitule"])
+                if re.search(exclu, t) or re.search(r"stage|appren|internship", norm(r["type"])) or not re.search(PERTINENT, t):
+                    continue
+                if (t, norm(r["entreprise"])) in vus:
+                    continue
+                vus.add((t, norm(r["entreprise"])))
+                m = re.match(r"(\w+) (\d+), (\d{4})", r.get("publie", ""))
+                d = f"{m.group(3)}-{EN_MOIS.get(m.group(1).lower(), 1):02d}-{int(m.group(2)):02d}" if m else ""
+                ty = norm(r["type"])
+                c = "CDI" if "permanent" in ty or re.search(r"\bcdi\b", t) else "CDD" if re.search(r"cdd|courte duree|temporary|interim", ty + " " + t) else ""
+                offres.append({"t": r["intitule"], "e": r["entreprise"], "l": r["lieu"], "reg": "", "c": c, "d": d, "sal": None, "x": "",
+                               "u": r["url"], "src": "Indeed", "m": ""})
+                n_ind += 1
+
+    # chiffres clés
+    tot = cpt("chef de produit")
+    n_cdi, n_cdd = cpt("chef de produit", "CDI").get("valeur"), cpt("chef de produit", "CDD").get("valeur")
+    stal = M.get("stage_alternance_chef_de_produit")
+    sals = sorted(o["sal"] for o in offres if o["sal"])
+    med = statistics.median(sals) if sals else None
+    q1, q3 = (statistics.quantiles(sals, n=4)[0], statistics.quantiles(sals, n=4)[2]) if len(sals) >= 8 else (None, None)
+    loc = [o for o in offres if o["src"] == "Adzuna"]
+    n_idf = sum(1 for o in loc if o["reg"] == "Ile-de-France")
+    n_63 = sum(1 for o in offres if re.search(r"puy-de-dome|clermont|\(63\)", norm(o["l"] + " " + o.get("dep", ""))))
+    n_aura = sum(1 for o in loc if o["reg"] == "Auvergne-Rhône-Alpes")
+    n_tt = sum(1 for o in loc if re.search(r"teletravail|remote|hybride", o["x"] + " " + norm(o["t"])))
+    sans_sal = sum(1 for o in loc if not o["sal"])
+    med_c = {c: statistics.median([o["sal"] for o in offres if o["sal"] and o["c"] == c]) for c in ("CDI", "CDD") if sum(1 for o in offres if o["sal"] and o["c"] == c) >= 3}
+    ans = []
+    for o in loc:
+        m = re.search(r"(\d+)\s*(?:a|à)?\s*(\d+)?\s*ans? (?:d'|d’|minimum d'|minimum d’|au moins d')?experience", o["x"])
+        if m:
+            ans.append(int(m.group(1)))
+    tranches = Counter("0 à 2 ans" if a <= 2 else "3 à 5 ans" if a <= 5 else "6 ans et plus" for a in ans)
+
+    bref = [(nombre(tot.get("valeur", 0)), f"offres d'emploi « chef de produit » en {M.get('jours', 60)} jours", f"contre {nombre(stal)} stages et alternances" if stal else ""),
+            (f"{pct(n_cdi or 0, (n_cdi or 0) + (n_cdd or 0))}" if n_cdi is not None and n_cdd is not None else "–", "sont des CDI (quand le contrat est précisé)", f"{nombre(n_cdi or 0)} CDI, {nombre(n_cdd or 0)} CDD"),
+            (k_euros(med) if med else "–", "salaire annuel brut médian affiché dans les annonces", f"de {k_euros(q1)} à {k_euros(q3)} pour la moitié d'entre elles ; {pct(sans_sal, len(loc))} n'affichent rien" if q1 else ""),
+            (pct(n_idf, len(loc)), "des offres sont en Île-de-France", f"{n_aura} en Auvergne-Rhône-Alpes ; " + (f"{n_63} dans le Puy-de-Dôme" if n_63 else "aucune dans le Puy-de-Dôme"))]
+    h = ['<h3 class="sous gros-titre" id="et-apres">Et après ? Le marché de l\'emploi en CDI et CDD</h3>',
+         retenir(f"Le métier recrute : <b>{nombre(tot.get('valeur', 0))}</b> offres d'emploi de chef de produit en {M.get('jours', 60)} jours, surtout en CDI. "
+                 f"Les annonces affichent surtout entre <b>{k_euros(q1) if q1 else '–'}</b> et <b>{k_euros(q3) if q3 else '–'}</b> brut par an, au-dessus du repère d'insertion de l'IAE (2 433 € brut par mois à un an, environ 29 k€ par an) car beaucoup demandent de l'expérience. "
+                 f"Ma position : viser un stage de fin d'études dans une entreprise qui recrute aussi en CDI, pour en faire ma première expérience de chef de produit."),
+         '<div class="bref bref4">' + "".join(f'<div><b>{v}</b><span>{l}</span><small>{n}</small></div>' for v, l, n in bref) + "</div>"]
+
+    # carte + tableau
+    villes, donnees = {}, []
+    for o in offres:
+        l = lieu(o["l"])
+        v = None
+        if l:
+            v, lon, lat, idf = l
+            x, y = proj(lon, lat)
+            villes[v] = [round(x, 1), round(y, 1), idf]
+        donnees.append({"t": o["t"], "e": o["e"] or "Entreprise non précisée", "l": o["l"], "v": v, "c": o["c"], "d": o["d"],
+                        "s": k_euros(o["sal"]) if o["sal"] else "", "n": round(o["sal"]) if o["sal"] else 0, "u": o["u"], "src": o["src"]})
+    n_places = sum(1 for d in donnees if d["v"])
+    chemin = lambda pts: "M" + "L".join(f"{proj(*p)[0]:.1f},{proj(*p)[1]:.1f}" for p in pts) + "Z"
+    hx, hy = proj(3.08, 45.78)
+    js = json.dumps({"offres": sorted(donnees, key=lambda d: d["d"], reverse=True), "villes": villes, "home": [round(hx, 1), round(hy, 1)]}, ensure_ascii=False).replace("</", "<\\/")
+    filtres = ('<div class="filtres m-filtres" role="group" aria-label="Filtrer par contrat">'
+               '<button type="button" data-f="Tous" class="on">Tout</button><button type="button" data-f="CDI">CDI</button><button type="button" data-f="CDD">CDD</button></div>')
+    src_txt = f"{n_adz} offres Adzuna" + (f" et {n_ind} offres Indeed" if n_ind else "")
+    h.append(f'''<div class="card carte"><div class="carte-tete"><h3>Où sont les emplois</h3>{filtres}</div>
+<p class="hint">{src_txt} de chef de produit et métiers proches publiées ces {M.get("jours", 60)} derniers jours, hors stages et alternances ; {n_places} sont placées sur la carte. {n_tt} offres Adzuna mentionnent le télétravail. <b>Cliquer sur une ville</b> pour voir ses offres.</p>
+<div class="carte-corps"><div class="carte-svg"><svg viewBox="0 0 420 410" role="img" aria-label="Carte de France des offres d'emploi">
+<path class="land" d="{chemin(FRANCE)}"/><path class="land" d="{chemin(CORSE)}"/><g id="m-bulles"></g>
+<circle class="home" cx="{hx:.1f}" cy="{hy:.1f}" r="7"/><text class="city muted" x="{hx - 10:.1f}" y="{hy + 4:.1f}" text-anchor="end">Clermont-Fd</text></svg>
+<p class="legende"><span class="pt-idf"></span>Île-de-France <span class="pt-autre"></span>autres villes <span class="pt-home"></span>Clermont-Ferrand</p></div>
+<div class="panneau" id="m-panneau" aria-live="polite"></div></div>
+<script type="application/json" id="donnees-marche">{js}</script></div>''')
+    source("Adzuna (API), marché de l'emploi", "title_only = <métier> · what_exclude = stage, stagiaire, internship, alternance, alternant, apprentissage, apprenti · max_days_old = 60 · permanent = 1 (CDI) ou contract = 1 (CDD)", jour, M.get("limites", ""), f"data/marche/{os.path.basename(fichiers[-1])}")
+    if n_ind:
+        source("Indeed (recherche d'offres)", "chef de produit, chef de gamme, chef de marque, product marketing manager · plusieurs villes · temps plein ou CDD", "2026-11-19", "Échantillon : 10 résultats par recherche, sans total ni salaire. Gardé hors du dépôt public.")
+
+    # métiers : CDI / CDD / non précisé
+    noms_m = {"chef de produit": "Chef de produit", "chef de gamme": "Chef de gamme", "chef de marque": "Chef de marque", "brand manager": "Brand manager",
+              "product marketing": "Product marketing", "marketing produit": "Marketing produit", "category manager": "Category manager",
+              "chef de projet marketing": "Chef de projet marketing", "trade marketing": "Trade marketing"}
+    lig, lig_pct = [], []
+    for m, nom in noms_m.items():
+        t_ = cpt(m).get("valeur") or 0
+        a, b = cpt(m, "CDI").get("valeur") or 0, cpt(m, "CDD").get("valeur") or 0
+        if not t_:
+            continue
+        lig.append((e(nom), {"cdi": a, "cdd": b, "np": max(0, t_ - a - b)}))
+        lig_pct.append((e(nom), round(100 * a / (a + b)) if a + b else 0, f"{a + b} précisés"))
+    lig.sort(key=lambda l: -sum(l[1].values()))
+    lig_pct.sort(key=lambda l: -l[1])
+    sal_m = sorted([(e(noms_m[c["metier"]]), round(c["salaire_moyen"] / 1000), "") for c in comptes if c["contrat"] == "tous" and not c.get("filtre") and c.get("salaire_moyen") and c["metier"] in noms_m], key=lambda l: -l[1])
+    h.append(f'''<div class="card"><div class="carte-tete"><h3>Quels intitulés recrutent, et en quel contrat</h3><div class="filtres" role="group" aria-label="Affichage">
+<button type="button" class="on" data-vue-metiers="n">Nombre d'offres</button><button type="button" data-vue-metiers="p">Part de CDI</button></div></div>
+<p class="hint">Offres d'emploi des {M.get("jours", 60)} derniers jours en France dont le titre contient ce mot, stages et alternances exclus.</p>
+<div class="metiers-vue" data-vue="n">{barres_empilees(lig, ["cdi", "cdd", "np"], {"cdi": "CDI", "cdd": "CDD", "np": "contrat non précisé"})}</div>
+<div class="metiers-vue" data-vue="p" hidden>{barres(lig_pct, maxi=100, unite=" %")}<p class="hint">Part de CDI parmi les offres dont le contrat est précisé.</p></div></div>''')
+
+    # salaires
+    bornes = [(0, 30000, "moins de 30 k€"), (30000, 35000, "30 à 35 k€"), (35000, 40000, "35 à 40 k€"), (40000, 45000, "40 à 45 k€"),
+              (45000, 50000, "45 à 50 k€"), (50000, 60000, "50 à 60 k€"), (60000, 10 ** 9, "60 k€ et plus")]
+    hist_l = [(lab, sum(1 for v in sals if a <= v < b)) for a, b, lab in bornes]
+    histo = (M.get("stats", {}).get("historique", {}).get("donnees") or {}).get("month", {})
+    pts = [(k + "-01", round(v)) for k, v in sorted(histo.items())]
+    h.append(f'''<div class="grid2"><div class="card"><h3>Combien c'est affiché</h3><div class="gros"><b>{k_euros(med) if med else "–"}</b><span>salaire annuel brut médian affiché, sur {len(sals)} offres qui donnent un montant (annualisé)</span></div>
+<div class="duo">{"".join(f'<div><b>{k_euros(v)}</b><span>médiane affichée en {c}</span></div>' for c, v in med_c.items())}<div><b>29 k€</b><span>repère IAE : 2 433 € brut par mois à un an</span></div></div>
+<p class="hint">Salaire moyen affiché par intitulé (k€ brut par an) :</p>{barres(sal_m, unite=" k€")}
+<p class="warn">Ce sont des salaires affichés dans les annonces, pas des salaires versés. Les offres seniors tirent la moyenne vers le haut : un premier poste se situe plutôt dans le bas de la fourchette.</p></div>
+<div class="card"><h3>L'évolution du salaire moyen affiché</h3><p class="hint">Offres « chef de produit » sur Adzuna, moyenne mensuelle, en € brut par an.</p>{courbe(pts, unite=" €", zero=False)}
+{('<p class="hint">Répartition des ' + str(len(sals)) + ' offres qui affichent un salaire (brut annuel) :</p>' + barres(hist_l)) if sals else ""}</div></div>''')
+
+    # niveau d'expérience et régions
+    niv = [(nom, cpt("chef de produit", "tous", {"what_and": mot}).get("valeur") or 0) for nom, mot in
+           [("« Junior »", "junior"), ("« Assistant »", "assistant"), ("« Confirmé »", "confirmé"), ("« Senior »", "senior")]]
+    regions = defaultdict(lambda: {"n": 0, "cdi": 0, "sal": []})
+    for o in loc:
+        r = {"Ile-de-France": "Île-de-France", "Hauts-De-France": "Hauts-de-France", "Grand-Est": "Grand Est", "Pays-de-la-Loire": "Pays de la Loire", "Paysde-la-Loire": "Pays de la Loire",
+             "Centre": "Centre-Val de Loire", "Centre-Val-de-Loire": "Centre-Val de Loire", "": "Non précisée"}.get(o["reg"], o["reg"])
+        regions[r]["n"] += 1
+        regions[r]["cdi"] += o["c"] == "CDI"
+        if o["sal"]:
+            regions[r]["sal"].append(o["sal"])
+    reg_rows = "".join(f'<tr><td>{e(r)}{" <small>(Clermont)</small>" if r == "Auvergne-Rhône-Alpes" else ""}</td><td class="num">{d["n"]}</td><td class="num">{pct(d["n"], len(loc))}</td>'
+                       f'<td class="num">{pct(d["cdi"], d["n"])}</td><td class="num">{k_euros(statistics.median(d["sal"])) if len(d["sal"]) >= 3 else "–"}</td></tr>'
+                       for r, d in sorted(regions.items(), key=lambda kv: (kv[0] == "Non précisée", -kv[1]["n"])))
+    ents = Counter()
+    for o in offres:
+        if o["e"] and not re.search(CABINETS, norm(o["e"])):
+            ents[o["e"].strip().title() if o["e"].isupper() else o["e"].strip()] += 1
+    top = [x for x in ents.most_common(10) if x[1] > 1]
+    exp_html = ('<p class="hint">Expérience demandée, quand l\'extrait de l\'annonce la précise (' + str(len(ans)) + ' offres) :</p>' + barres([(k, tranches.get(k, 0)) for k in ["0 à 2 ans", "3 à 5 ans", "6 ans et plus"]])) if len(ans) >= 5 else ""
+    h.append(f'''<div class="grid2"><div class="card"><h3>Le niveau demandé</h3><p class="hint">Offres « chef de produit » dont l'annonce contient ce mot.</p>{barres(niv)}{exp_html}
+<p class="warn">La plupart des postes demandent de l'expérience : un stage ou une alternance de chef de produit compte comme première expérience.</p></div>
+<div class="card"><h3>Les employeurs qui recrutent</h3><p class="hint">Offres d'emploi dans l'échantillon (cabinets de recrutement et intérim retirés).</p>{barres(top)}</div></div>
+<div class="card"><h3>Par région</h3><div class="tablebox"><table><thead><tr><th>Région</th><th class="num">Offres</th><th class="num">Part</th><th class="num">Part de CDI</th><th class="num">Salaire médian</th></tr></thead><tbody>{reg_rows}</tbody></table></div>
+<p class="hint">Sur les {len(loc)} offres Adzuna détaillées. Salaire médian affiché quand au moins 3 offres le donnent ; la part de CDI compte les offres où le contrat est indiqué ou écrit dans l'annonce.</p></div>''')
+
+    # tableau des offres
+    h.append(f'''<div class="card"><div class="carte-tete"><h3>Toutes les offres d'emploi</h3>{filtres}</div>
+<div class="outils-carte"><label class="recherche"><span class="sr">Chercher</span><input type="search" id="m-q" placeholder="Chercher un mot, une entreprise, une ville (ex. cosmétique, Lyon, junior)"></label><span class="hint" id="m-compte"></span></div>
+<div class="tablebox"><table id="m-table"><thead><tr><th data-k="t">Intitulé</th><th data-k="e">Entreprise</th><th data-k="l">Lieu</th><th data-k="c">Contrat</th><th data-k="n" class="num">Salaire</th><th data-k="d" aria-sort="descending">Publiée</th><th data-k="src">Source</th></tr></thead><tbody id="m-corps"></tbody></table></div>
+<p class="suivant gauche"><button type="button" class="btn ghost" id="m-plus" hidden></button></p>
+<p class="hint">Cliquer sur un en-tête pour trier. Le salaire n'apparaît que s'il est écrit dans l'annonce.</p></div>''')
+    return "".join(h)
+
 
 def construire():
     contenu = lire_json(os.path.join(RACINE, "contenu.json"), {})
@@ -503,7 +721,7 @@ def construire():
     s3[0] = s3[0].replace("<b>À retenir</b>", "<b>Ce qu'ils cherchent</b>", 1)
     sections = [
         ("offres", "1", "Les offres", "".join(s2) + "".join(s1[1:])),
-        ("competences", "2", "Ce que les recruteurs demandent", "".join(s3)),
+        ("competences", "2", "Ce que les recruteurs demandent, et après", '<h3 class="sous gros-titre">Pour le stage et l\'alternance</h3>' + "".join(s3) + section_marche()),
         ("acteurs", "3", "Où candidater", "".join(s5)),
         ("actions", "4", f"Où j'en suis {flag(act)}", "".join(s6)),
     ]
@@ -545,6 +763,7 @@ def construire():
 <footer><div class="in">{note_sources()}<p>Les offres sont collectées automatiquement chaque matin (France Travail, Adzuna, La bonne alternance, annuaire des entreprises). Données et méthode : <a href="{DEPOT}">{DEPOT.replace("https://", "")}</a>.</p></div></footer>
 <script src="assets/onglets.js"></script>
 <script src="assets/carte.js"></script>
+<script src="assets/marche.js"></script>
 </body></html>'''
     sortie = os.path.join(PRIVE, "site") if PRIVE else RACINE
     if PRIVE:

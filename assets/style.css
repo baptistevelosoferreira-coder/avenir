@@ -506,3 +506,34 @@ body > .lave { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-
 }
 @media (prefers-reduced-motion: reduce) { .lave i { animation: none; } }
 @media (max-width: 700px) { body > .lave { filter: blur(28px); opacity: .75; } }
+
+/* « Et après » : marché CDI / CDD */
+h3.sous.gros-titre { font-size: 26px; margin: 34px 0 14px; }
+h3.sous.gros-titre:first-child { margin-top: 4px; }
+.bref.bref4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.bref.bref4 > div:last-child b { font-size: 28px; line-height: 1.1; }
+.hb .bar.pile { display: flex; background: var(--track); }
+.hb .bar.pile .sg { border-radius: 0; }
+.sg { display: inline-block; height: 100%; }
+.sg.cdi { background: #2f8f57; } .sg.cdd { background: #f3b33d; } .sg.np { background: #b9c9bf; }
+.legende-pile { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; margin: 8px 0 0; color: inherit; }
+.legende-pile span { display: inline-flex; align-items: center; gap: 6px; }
+.legende-pile i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.tag.src { background: #e8edf9; color: #2b3f78; }
+#m-table th[data-k] { cursor: pointer; user-select: none; white-space: nowrap; }
+#m-table th[data-k]::after { content: " ↕"; opacity: .35; }
+#m-table th[aria-sort="ascending"]::after { content: " ↑"; opacity: 1; }
+#m-table th[aria-sort="descending"]::after { content: " ↓"; opacity: 1; }
+#m-table td a { color: inherit; font-weight: 600; }
+.suivant.gauche { justify-content: flex-start; margin: 12px 0 4px; }
+#m-compte { margin: 0 0 0 auto; white-space: nowrap; }
+@media (max-width: 860px) { .bref.bref4 { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 520px) { .bref.bref4 { grid-template-columns: 1fr; } }
+.duo { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0 0 12px; }
+.duo > div { background: rgba(11, 42, 24, .06); border-radius: 12px; padding: 10px 12px; display: grid; gap: 2px; }
+.duo b { font: 800 20px/1.1 var(--display); color: #0b2a18; }
+.duo span { font-size: 12px; line-height: 1.3; color: #3c5547; }
+.hb .bar.pile span.sg { background: #b9c9bf; }
+.hb .bar.pile span.sg.cdi { background: #2f8f57; }
+.hb .bar.pile span.sg.cdd { background: #f3b33d; }
+.legende-pile i.sg.cdi { background: #2f8f57; } .legende-pile i.sg.cdd { background: #f3b33d; } .legende-pile i.sg.np { background: #b9c9bf; }

@@ -37,6 +37,11 @@ jobs:
           else
             python scripts/collecte.py
           fi
+      - name: Marché de l'emploi (CDI, CDD)
+        env:
+          ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
+          ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
+        run: python scripts/marche.py || echo "marché : échec"
       - name: Mettre à jour la base d'entreprises du 63
         run: python scripts/entreprises.py || echo "API Recherche d'entreprises indisponible"
       - name: Reconstruire le site
