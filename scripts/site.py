@@ -537,6 +537,7 @@ def section_sources(prive=False):
     """Onglet « Sources » : les trois sources citées."""
     srcs = [
         ("Adzuna", "https://www.adzuna.fr/", "Agrégateur d'offres d'emploi, interrogé par son API publique : offres de stage, d'alternance, de CDI et de CDD, comptages par intitulé, salaires affichés."),
+        ("Indeed", "https://fr.indeed.com/", "Site d'offres d'emploi, consulté avec le connecteur officiel Indeed : offres de CDI et de CDD (dont assistant chef de produit)."),
         ("Jooble", "https://fr.jooble.org/", "Agrégateur d'offres d'emploi, interrogé par son API : offres complémentaires de stage et d'alternance."),
         ("Fiche ROME M1703 « Management et gestion de produit », France Travail", "https://candidat.francetravail.fr/metierscope/fiche-metier/M1703",
          "Fiche métier du chef de produit : missions, compétences et accès au métier."),
