@@ -1,29 +1,70 @@
-# Recherche de stage / alternance : Chef de produit marketing
+# Chef de produit, le marché compté
 
-> Dossier de travail. Étape 1 : identifier le métier sur Métierscope (France Travail).
-> Source : fiche emploi M1703 de France Travail (octobre 2026), envoyée par Lucie.
+Ma recherche de **stage ou d'alternance d'assistant(e) chef de produit**, à partir de janvier 2027. Le site repère chaque matin les offres publiées, les place sur une carte, montre ce que les recruteurs demandent, les entreprises à cibler et où j'en suis.
 
-## Intitulé principal
+Page publiée : `index.html` à la racine (GitHub Pages). Le site est découpé en onglets (`assets/onglets.js`).
 
-Chef / Cheffe de produit (intitulé ROME), poste visé : assistant(e) chef de produit
+Intitulés suivis : chef de produit, chef de marque, chef de gamme, chef de marché, product manager, brand manager.
 
-## Variantes (appellations proches)
+## Ce que contient le site
 
-- Chef / Cheffe de marque
-- Assistant / Assistante chef de marché
-- Product manager
+| Onglet | Contenu |
+|---|---|
+| 1. Les offres | Carte cliquable des offres, dates de début, mots-clés à taper |
+| 2. Ce que les recruteurs demandent | Compétences et qualités demandées, comparées à mon CV |
+| 3. Où candidater | Entreprises qui publient le plus |
+| Accueil | Résumé de ma recherche |
 
-## Code ROME
+Chaque graphique a un bloc « Source » qui donne le canal, la requête exacte, la date et les limites du chiffre, avec un lien vers le fichier de données.
 
-**M1703** : Chef / Cheffe de produit (emploi cadre, accessible de Bac + 3 à Bac + 5 en commerce ou marketing)
+## Les canaux
 
-## Questions sur ce marché
+| Canal | Accès | Usage |
+|---|---|---|
+| France Travail, Offres d'emploi v2 | API officielle, clé gratuite (francetravail.io) | Offres du code ROME M1703, compétences déclarées |
+| Adzuna | API, clé gratuite | Comptages par intitulé et par lieu, offres détaillées, régions, entreprises |
+| La bonne alternance | API de l'État, jeton gratuit | Offres d'alternance et entreprises qui recrutent sans publier |
+| Recherche d'entreprises | API data.gouv, sans clé | Base des entreprises du Puy-de-Dôme dans les secteurs qui gèrent des gammes |
+| Jooble | API, clé sur demande | Offres complémentaires de la veille du 5 au 17 novembre |
 
-1. Quels secteurs recrutent le plus d'assistants chefs de produit en alternance ou en stage (grande consommation, cosmétique, santé, tech) ?
-2. Quelles compétences et quels outils reviennent le plus dans les offres (études de marché, Excel, Nielsen, gestion de projet, digital) ?
-3. Où se concentrent les offres (Paris, grandes métropoles, télétravail) et à quelle période recrutent les entreprises ?
-4. Quelle rémunération et quel rythme d'alternance sont proposés, et quelles écoles ou formations les recruteurs attendent-ils ?
+Pas d'aspiration de LinkedIn, de l'APEC ni d'Indeed : leurs conditions d'utilisation l'interdisent.
 
----
+## Les fichiers
 
-_Étapes suivantes : à définir._
+```
+scripts/collecte.py       interroge France Travail, Adzuna, La bonne alternance
+scripts/entreprises.py    base des entreprises du 63 (API Recherche d'entreprises)
+scripts/site.py           relit data/ et contenu.json, écrit index.html
+contenu.json              textes écrits à la main (prochaines étapes, stratégie)
+assets/style.css          mise en page
+data/AAAA-MM-JJ/          une extraction datée : CSV des offres, comptages.json (requête de chaque chiffre)
+data/veille-stage-alternance/   veille quotidienne du 5 au 17 novembre 2026 (une ligne par offre retenue)
+data/annonces-lues.csv    annonces lues en entier (missions, profil, gratification, début)
+data/entreprises_63.csv   base des entreprises du Puy-de-Dôme
+.github/workflows/veille.yml    automatisation quotidienne
+```
+
+## Automatisation
+
+Chaque matin vers 6 h 40, l'Action `veille.yml` lance `collecte.py`, `entreprises.py` puis `site.py`, et enregistre le résultat par un commit. L'historique Git sert d'archive datée du marché.
+
+Les clés d'API ne sont jamais dans le code. Elles se rangent dans **Settings → Secrets and variables → Actions** du dépôt :
+`ADZUNA_APP_ID`, `ADZUNA_APP_KEY`, `LBA_TOKEN`, `FT_CLIENT_ID`, `FT_CLIENT_SECRET`.
+Sans clé, l'Action saute la collecte et reconstruit seulement la page.
+
+Relancer à la main sur son ordinateur :
+
+```bash
+pip install requests
+cp .env.example .env          # puis y coller ses clés
+python scripts/collecte.py
+python scripts/entreprises.py
+python scripts/site.py        # aucune dépendance, bibliothèque standard seulement
+```
+
+Ou depuis GitHub : onglet **Actions → Veille du métier → Run workflow**.
+
+## RGPD
+
+Le dépôt est public. Il ne contient aucune donnée personnelle : ni nom, ni école, ni CV, ni lettre, ni coordonnées, ni suivi de candidatures. Ces éléments restent dans une version privée du site, construite hors du dépôt (`AVENIR_PRIVE=<dossier> python scripts/site.py`).
+La base d'entreprises ne contient aucun nom de personne.

@@ -1,0 +1,447 @@
+{
+ "date": "2026-11-17",
+ "rome": "M1703",
+ "comptages": [
+  {
+   "canal": "Adzuna",
+   "mesure": "stage ou alternance, titre contenant « chef de produit » (30 jours)",
+   "valeur": 217,
+   "requete": {
+    "title_only": "chef de produit",
+    "what_or": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 30
+   },
+   "date": "2026-11-17",
+   "limites": "Agrégateur : une offre peut être publiée sur plusieurs sites et comptée une fois par Adzuna, mais Adzuna ne voit pas tout le marché. Recherche dans le titre seulement."
+  },
+  {
+   "canal": "Adzuna",
+   "mesure": "stage ou alternance, titre contenant « assistant chef de produit » (30 jours)",
+   "valeur": 135,
+   "requete": {
+    "title_only": "assistant chef de produit",
+    "what_or": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 30
+   },
+   "date": "2026-11-17",
+   "limites": "Agrégateur : une offre peut être publiée sur plusieurs sites et comptée une fois par Adzuna, mais Adzuna ne voit pas tout le marché. Recherche dans le titre seulement."
+  },
+  {
+   "canal": "Adzuna",
+   "mesure": "stage ou alternance, titre contenant « chef de marque » (30 jours)",
+   "valeur": 7,
+   "requete": {
+    "title_only": "chef de marque",
+    "what_or": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 30
+   },
+   "date": "2026-11-17",
+   "limites": "Agrégateur : une offre peut être publiée sur plusieurs sites et comptée une fois par Adzuna, mais Adzuna ne voit pas tout le marché. Recherche dans le titre seulement."
+  },
+  {
+   "canal": "Adzuna",
+   "mesure": "stage ou alternance, titre contenant « chef de gamme » (30 jours)",
+   "valeur": 3,
+   "requete": {
+    "title_only": "chef de gamme",
+    "what_or": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 30
+   },
+   "date": "2026-11-17",
+   "limites": "Agrégateur : une offre peut être publiée sur plusieurs sites et comptée une fois par Adzuna, mais Adzuna ne voit pas tout le marché. Recherche dans le titre seulement."
+  },
+  {
+   "canal": "Adzuna",
+   "mesure": "stage ou alternance, titre contenant « product manager » (30 jours)",
+   "valeur": 130,
+   "requete": {
+    "title_only": "product manager",
+    "what_or": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 30
+   },
+   "date": "2026-11-17",
+   "limites": "Agrégateur : une offre peut être publiée sur plusieurs sites et comptée une fois par Adzuna, mais Adzuna ne voit pas tout le marché. Recherche dans le titre seulement."
+  },
+  {
+   "canal": "Adzuna",
+   "mesure": "stage ou alternance, titre contenant « brand manager » (30 jours)",
+   "valeur": 26,
+   "requete": {
+    "title_only": "brand manager",
+    "what_or": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 30
+   },
+   "date": "2026-11-17",
+   "limites": "Agrégateur : une offre peut être publiée sur plusieurs sites et comptée une fois par Adzuna, mais Adzuna ne voit pas tout le marché. Recherche dans le titre seulement."
+  },
+  {
+   "canal": "Adzuna",
+   "mesure": "stage ou alternance, titre contenant « chef de marche » (30 jours)",
+   "valeur": 17,
+   "requete": {
+    "title_only": "chef de marche",
+    "what_or": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 30
+   },
+   "date": "2026-11-17",
+   "limites": "Agrégateur : une offre peut être publiée sur plusieurs sites et comptée une fois par Adzuna, mais Adzuna ne voit pas tout le marché. Recherche dans le titre seulement."
+  },
+  {
+   "canal": "Adzuna",
+   "mesure": "chef de produit, tous contrats confondus (30 jours) : pour comparaison",
+   "valeur": 697,
+   "requete": {
+    "title_only": "chef de produit",
+    "max_days_old": 30
+   },
+   "date": "2026-11-17",
+   "limites": "Agrégateur : une offre peut être publiée sur plusieurs sites et comptée une fois par Adzuna, mais Adzuna ne voit pas tout le marché. Recherche dans le titre seulement."
+  },
+  {
+   "canal": "Adzuna",
+   "mesure": "chef de produit : stage (30 jours)",
+   "valeur": 181,
+   "requete": {
+    "title_only": "chef de produit",
+    "what_or": "stage stagiaire internship",
+    "max_days_old": 30
+   },
+   "date": "2026-11-17",
+   "limites": "Agrégateur : une offre peut être publiée sur plusieurs sites et comptée une fois par Adzuna, mais Adzuna ne voit pas tout le marché. Recherche dans le titre seulement."
+  },
+  {
+   "canal": "Adzuna",
+   "mesure": "chef de produit : alternance (30 jours)",
+   "valeur": 125,
+   "requete": {
+    "title_only": "chef de produit",
+    "what_or": "alternance alternant apprentissage apprenti",
+    "max_days_old": 30
+   },
+   "date": "2026-11-17",
+   "limites": "Agrégateur : une offre peut être publiée sur plusieurs sites et comptée une fois par Adzuna, mais Adzuna ne voit pas tout le marché. Recherche dans le titre seulement."
+  },
+  {
+   "canal": "Adzuna",
+   "mesure": "chef de produit, stage ou alternance : télétravail mentionné (30 jours)",
+   "valeur": 29,
+   "requete": {
+    "title_only": "chef de produit",
+    "what_and": "télétravail",
+    "what_or": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 30
+   },
+   "date": "2026-11-17",
+   "limites": "Agrégateur : une offre peut être publiée sur plusieurs sites et comptée une fois par Adzuna, mais Adzuna ne voit pas tout le marché. Recherche dans le titre seulement."
+  },
+  {
+   "canal": "Adzuna",
+   "mesure": "chef de produit, stage ou alternance : Clermont-Ferrand (40 km) (30 jours)",
+   "valeur": 0,
+   "requete": {
+    "title_only": "chef de produit",
+    "what_or": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 30,
+    "where": "Clermont-Ferrand",
+    "distance": 40
+   },
+   "date": "2026-11-17",
+   "limites": "Agrégateur : une offre peut être publiée sur plusieurs sites et comptée une fois par Adzuna, mais Adzuna ne voit pas tout le marché. Recherche dans le titre seulement."
+  },
+  {
+   "canal": "Adzuna",
+   "mesure": "chef de produit, stage ou alternance : Puy-de-Dôme (30 jours)",
+   "valeur": 0,
+   "requete": {
+    "title_only": "chef de produit",
+    "what_or": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 30,
+    "where": "Puy-de-Dôme"
+   },
+   "date": "2026-11-17",
+   "limites": "Agrégateur : une offre peut être publiée sur plusieurs sites et comptée une fois par Adzuna, mais Adzuna ne voit pas tout le marché. Recherche dans le titre seulement."
+  },
+  {
+   "canal": "Adzuna",
+   "mesure": "chef de produit, stage ou alternance : Auvergne-Rhône-Alpes (30 jours)",
+   "valeur": 19,
+   "requete": {
+    "title_only": "chef de produit",
+    "what_or": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 30,
+    "where": "Auvergne-Rhône-Alpes"
+   },
+   "date": "2026-11-17",
+   "limites": "Agrégateur : une offre peut être publiée sur plusieurs sites et comptée une fois par Adzuna, mais Adzuna ne voit pas tout le marché. Recherche dans le titre seulement."
+  },
+  {
+   "canal": "Adzuna",
+   "mesure": "chef de produit, stage ou alternance : Île-de-France (30 jours)",
+   "valeur": 111,
+   "requete": {
+    "title_only": "chef de produit",
+    "what_or": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 30,
+    "where": "Île-de-France"
+   },
+   "date": "2026-11-17",
+   "limites": "Agrégateur : une offre peut être publiée sur plusieurs sites et comptée une fois par Adzuna, mais Adzuna ne voit pas tout le marché. Recherche dans le titre seulement."
+  },
+  {
+   "canal": "Adzuna",
+   "mesure": "chef de produit, stage ou alternance : Lyon (30 km) (30 jours)",
+   "valeur": 8,
+   "requete": {
+    "title_only": "chef de produit",
+    "what_or": "stage stagiaire internship alternance alternant apprentissage apprenti",
+    "max_days_old": 30,
+    "where": "Lyon",
+    "distance": 30
+   },
+   "date": "2026-11-17",
+   "limites": "Agrégateur : une offre peut être publiée sur plusieurs sites et comptée une fois par Adzuna, mais Adzuna ne voit pas tout le marché. Recherche dans le titre seulement."
+  },
+  {
+   "canal": "La bonne alternance",
+   "mesure": "offres d'alternance ROME M1703 à 60 km de Clermont-Ferrand",
+   "valeur": 0,
+   "requete": {
+    "romes": "M1703",
+    "latitude": 45.7772,
+    "longitude": 3.087,
+    "radius": 60
+   },
+   "date": "2026-11-17",
+   "limites": "Offres d'alternance publiées (France Travail, partenaires, formulaires LBA) ; plafond de résultats de l'API."
+  },
+  {
+   "canal": "La bonne alternance",
+   "mesure": "entreprises susceptibles de recruter en alternance (sans offre publiée) à 60 km de Clermont-Ferrand",
+   "valeur": 79,
+   "requete": {
+    "romes": "M1703",
+    "latitude": 45.7772,
+    "longitude": 3.087,
+    "radius": 60
+   },
+   "date": "2026-11-17",
+   "limites": "Prédiction de La bonne alternance à partir des embauches passées : ce n'est pas une offre."
+  },
+  {
+   "canal": "La bonne alternance",
+   "mesure": "offres d'alternance ROME M1703 à 60 km de Paris",
+   "valeur": 4,
+   "requete": {
+    "romes": "M1703",
+    "latitude": 48.8566,
+    "longitude": 2.3522,
+    "radius": 60
+   },
+   "date": "2026-11-17",
+   "limites": "Offres d'alternance publiées (France Travail, partenaires, formulaires LBA) ; plafond de résultats de l'API."
+  },
+  {
+   "canal": "La bonne alternance",
+   "mesure": "entreprises susceptibles de recruter en alternance (sans offre publiée) à 60 km de Paris",
+   "valeur": 150,
+   "requete": {
+    "romes": "M1703",
+    "latitude": 48.8566,
+    "longitude": 2.3522,
+    "radius": 60
+   },
+   "date": "2026-11-17",
+   "limites": "Prédiction de La bonne alternance à partir des embauches passées : ce n'est pas une offre."
+  },
+  {
+   "canal": "La bonne alternance",
+   "mesure": "offres d'alternance ROME M1703 à 60 km de Lyon",
+   "valeur": 0,
+   "requete": {
+    "romes": "M1703",
+    "latitude": 45.764,
+    "longitude": 4.8357,
+    "radius": 60
+   },
+   "date": "2026-11-17",
+   "limites": "Offres d'alternance publiées (France Travail, partenaires, formulaires LBA) ; plafond de résultats de l'API."
+  },
+  {
+   "canal": "La bonne alternance",
+   "mesure": "entreprises susceptibles de recruter en alternance (sans offre publiée) à 60 km de Lyon",
+   "valeur": 150,
+   "requete": {
+    "romes": "M1703",
+    "latitude": 45.764,
+    "longitude": 4.8357,
+    "radius": 60
+   },
+   "date": "2026-11-17",
+   "limites": "Prédiction de La bonne alternance à partir des embauches passées : ce n'est pas une offre."
+  },
+  {
+   "canal": "La bonne alternance",
+   "mesure": "offres d'alternance ROME M1703 à 60 km de Lille",
+   "valeur": 0,
+   "requete": {
+    "romes": "M1703",
+    "latitude": 50.6292,
+    "longitude": 3.0573,
+    "radius": 60
+   },
+   "date": "2026-11-17",
+   "limites": "Offres d'alternance publiées (France Travail, partenaires, formulaires LBA) ; plafond de résultats de l'API."
+  },
+  {
+   "canal": "La bonne alternance",
+   "mesure": "entreprises susceptibles de recruter en alternance (sans offre publiée) à 60 km de Lille",
+   "valeur": 150,
+   "requete": {
+    "romes": "M1703",
+    "latitude": 50.6292,
+    "longitude": 3.0573,
+    "radius": 60
+   },
+   "date": "2026-11-17",
+   "limites": "Prédiction de La bonne alternance à partir des embauches passées : ce n'est pas une offre."
+  },
+  {
+   "canal": "La bonne alternance",
+   "mesure": "offres d'alternance ROME M1703 à 60 km de Bordeaux",
+   "valeur": 0,
+   "requete": {
+    "romes": "M1703",
+    "latitude": 44.8378,
+    "longitude": -0.5792,
+    "radius": 60
+   },
+   "date": "2026-11-17",
+   "limites": "Offres d'alternance publiées (France Travail, partenaires, formulaires LBA) ; plafond de résultats de l'API."
+  },
+  {
+   "canal": "La bonne alternance",
+   "mesure": "entreprises susceptibles de recruter en alternance (sans offre publiée) à 60 km de Bordeaux",
+   "valeur": 150,
+   "requete": {
+    "romes": "M1703",
+    "latitude": 44.8378,
+    "longitude": -0.5792,
+    "radius": 60
+   },
+   "date": "2026-11-17",
+   "limites": "Prédiction de La bonne alternance à partir des embauches passées : ce n'est pas une offre."
+  },
+  {
+   "canal": "La bonne alternance",
+   "mesure": "offres d'alternance ROME M1703 à 60 km de Nantes",
+   "valeur": 0,
+   "requete": {
+    "romes": "M1703",
+    "latitude": 47.2184,
+    "longitude": -1.5536,
+    "radius": 60
+   },
+   "date": "2026-11-17",
+   "limites": "Offres d'alternance publiées (France Travail, partenaires, formulaires LBA) ; plafond de résultats de l'API."
+  },
+  {
+   "canal": "La bonne alternance",
+   "mesure": "entreprises susceptibles de recruter en alternance (sans offre publiée) à 60 km de Nantes",
+   "valeur": 150,
+   "requete": {
+    "romes": "M1703",
+    "latitude": 47.2184,
+    "longitude": -1.5536,
+    "radius": 60
+   },
+   "date": "2026-11-17",
+   "limites": "Prédiction de La bonne alternance à partir des embauches passées : ce n'est pas une offre."
+  },
+  {
+   "canal": "La bonne alternance",
+   "mesure": "offres d'alternance ROME M1703 à 60 km de Toulouse",
+   "valeur": 0,
+   "requete": {
+    "romes": "M1703",
+    "latitude": 43.6047,
+    "longitude": 1.4442,
+    "radius": 60
+   },
+   "date": "2026-11-17",
+   "limites": "Offres d'alternance publiées (France Travail, partenaires, formulaires LBA) ; plafond de résultats de l'API."
+  },
+  {
+   "canal": "La bonne alternance",
+   "mesure": "entreprises susceptibles de recruter en alternance (sans offre publiée) à 60 km de Toulouse",
+   "valeur": 150,
+   "requete": {
+    "romes": "M1703",
+    "latitude": 43.6047,
+    "longitude": 1.4442,
+    "radius": 60
+   },
+   "date": "2026-11-17",
+   "limites": "Prédiction de La bonne alternance à partir des embauches passées : ce n'est pas une offre."
+  },
+  {
+   "canal": "La bonne alternance",
+   "mesure": "offres d'alternance ROME M1703 à 60 km de Marseille",
+   "valeur": 0,
+   "requete": {
+    "romes": "M1703",
+    "latitude": 43.2965,
+    "longitude": 5.3698,
+    "radius": 60
+   },
+   "date": "2026-11-17",
+   "limites": "Offres d'alternance publiées (France Travail, partenaires, formulaires LBA) ; plafond de résultats de l'API."
+  },
+  {
+   "canal": "La bonne alternance",
+   "mesure": "entreprises susceptibles de recruter en alternance (sans offre publiée) à 60 km de Marseille",
+   "valeur": 150,
+   "requete": {
+    "romes": "M1703",
+    "latitude": 43.2965,
+    "longitude": 5.3698,
+    "radius": 60
+   },
+   "date": "2026-11-17",
+   "limites": "Prédiction de La bonne alternance à partir des embauches passées : ce n'est pas une offre."
+  },
+  {
+   "canal": "La bonne alternance",
+   "mesure": "offres d'alternance ROME M1703 à 60 km de Strasbourg",
+   "valeur": 0,
+   "requete": {
+    "romes": "M1703",
+    "latitude": 48.5734,
+    "longitude": 7.7521,
+    "radius": 60
+   },
+   "date": "2026-11-17",
+   "limites": "Offres d'alternance publiées (France Travail, partenaires, formulaires LBA) ; plafond de résultats de l'API."
+  },
+  {
+   "canal": "La bonne alternance",
+   "mesure": "entreprises susceptibles de recruter en alternance (sans offre publiée) à 60 km de Strasbourg",
+   "valeur": 150,
+   "requete": {
+    "romes": "M1703",
+    "latitude": 48.5734,
+    "longitude": 7.7521,
+    "radius": 60
+   },
+   "date": "2026-11-17",
+   "limites": "Prédiction de La bonne alternance à partir des embauches passées : ce n'est pas une offre."
+  }
+ ],
+ "journal": [
+  "  -> offres_adzuna.csv : 217 lignes",
+  "Adzuna : 217 offres détaillées, 4 statistiques",
+  "France Travail : identifiants absents, canal ignoré",
+  "  -> offres_lba.csv : 3 lignes",
+  "  -> recruteurs_lba.csv : 1279 lignes",
+  "La bonne alternance : 3 offres, 1279 recruteurs potentiels"
+ ]
+}

@@ -1,0 +1,199 @@
+{
+ "geodata": {
+  "requete": {
+   "endpoint": "geodata",
+   "what": "chef produit stage",
+   "location0": "France"
+  },
+  "date": "2026-11-17",
+  "donnees": {
+   "locations": [
+    {
+     "location": {
+      "display_name": "Ile-de-France, France",
+      "__CLASS__": "Adzuna::API::Response::Location",
+      "area": [
+       "France",
+       "Ile-de-France"
+      ]
+     },
+     "__CLASS__": "Adzuna::API::Response::LocationJobs",
+     "count": 13
+    },
+    {
+     "location": {
+      "display_name": "Bretagne, France",
+      "__CLASS__": "Adzuna::API::Response::Location",
+      "area": [
+       "France",
+       "Bretagne"
+      ]
+     },
+     "__CLASS__": "Adzuna::API::Response::LocationJobs",
+     "count": 6
+    },
+    {
+     "count": 5,
+     "__CLASS__": "Adzuna::API::Response::LocationJobs",
+     "location": {
+      "area": [
+       "France",
+       "Pays de la Loire"
+      ],
+      "__CLASS__": "Adzuna::API::Response::Location",
+      "display_name": "Pays de la Loire, France"
+     }
+    },
+    {
+     "__CLASS__": "Adzuna::API::Response::LocationJobs",
+     "count": 4,
+     "location": {
+      "area": [
+       "France",
+       "Auvergne-Rhône-Alpes"
+      ],
+      "display_name": "Auvergne-Rhône-Alpes, France",
+      "__CLASS__": "Adzuna::API::Response::Location"
+     }
+    },
+    {
+     "location": {
+      "area": [
+       "France",
+       "Grand-Est"
+      ],
+      "__CLASS__": "Adzuna::API::Response::Location",
+      "display_name": "Grand-Est, France"
+     },
+     "count": 2,
+     "__CLASS__": "Adzuna::API::Response::LocationJobs"
+    },
+    {
+     "location": {
+      "area": [
+       "France",
+       "Hauts-De-France"
+      ],
+      "__CLASS__": "Adzuna::API::Response::Location",
+      "display_name": "Hauts-De-France, France"
+     },
+     "count": 2,
+     "__CLASS__": "Adzuna::API::Response::LocationJobs"
+    },
+    {
+     "__CLASS__": "Adzuna::API::Response::LocationJobs",
+     "count": 2,
+     "location": {
+      "display_name": "Normandie, France",
+      "__CLASS__": "Adzuna::API::Response::Location",
+      "area": [
+       "France",
+       "Normandie"
+      ]
+     }
+    },
+    {
+     "location": {
+      "area": [
+       "France",
+       "Nouvelle-Aquitaine"
+      ],
+      "__CLASS__": "Adzuna::API::Response::Location",
+      "display_name": "Nouvelle-Aquitaine, France"
+     },
+     "__CLASS__": "Adzuna::API::Response::LocationJobs",
+     "count": 2
+    }
+   ],
+   "__CLASS__": "Adzuna::API::Response::JobGeoData",
+   "location": {
+    "area": [
+     "France"
+    ],
+    "__CLASS__": "Adzuna::API::Response::Location",
+    "display_name": "France"
+   }
+  }
+ },
+ "histogramme_salaires": {
+  "requete": {
+   "endpoint": "histogram",
+   "what": "chef produit stage"
+  },
+  "date": "2026-11-17",
+  "donnees": {
+   "__CLASS__": "Adzuna::API::Response::SalaryHistogram",
+   "histogram": {
+    "40000": 0,
+    "20000": 0,
+    "60000": 1,
+    "10000": 1,
+    "50000": 0,
+    "30000": 0,
+    "70000": 0
+   }
+  }
+ },
+ "historique_salaires": {
+  "requete": {
+   "endpoint": "history",
+   "category": "pr-advertising-marketing-jobs",
+   "months": 12
+  },
+  "date": "2026-11-17",
+  "donnees": {
+   "__CLASS__": "Adzuna::API::Response::HistoricalSalary",
+   "month": {
+    "2026-07": 27890.56,
+    "2025-12": 32655.89,
+    "2026-09": 40930.87,
+    "2026-05": 24281.12,
+    "2026-10": 42213.04,
+    "2026-06": 29756.57,
+    "2026-03": 21933.91,
+    "2026-02": 21522.3,
+    "2026-01": 22664.51,
+    "2025-11": 28581.51,
+    "2026-08": 28637.43,
+    "2026-04": 22240.1
+   }
+  }
+ },
+ "top_entreprises": {
+  "requete": {
+   "endpoint": "top_companies",
+   "what": "chef produit stage"
+  },
+  "date": "2026-11-17",
+  "donnees": {
+   "leaderboard": [
+    {
+     "__CLASS__": "Adzuna::API::Response::Company",
+     "count": 8,
+     "canonical_name": "Agrial"
+    },
+    {
+     "count": 3,
+     "canonical_name": "Pierre Fabre",
+     "__CLASS__": "Adzuna::API::Response::Company"
+    },
+    {
+     "canonical_name": "Groupe Casino",
+     "count": 2,
+     "__CLASS__": "Adzuna::API::Response::Company"
+    },
+    {
+     "canonical_name": "Roche Bobois",
+     "count": 2,
+     "__CLASS__": "Adzuna::API::Response::Company"
+    },
+    {
+     "canonical_name": "Groupe LDC",
+     "count": 2,
+     "__CLASS__": "Adzuna::API::Response::Company"
+    }
+   ],
+   "__CLASS__": "Adzuna::API::Response::TopCompanies"
+  }
+ }
+}

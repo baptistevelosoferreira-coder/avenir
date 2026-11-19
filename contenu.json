@@ -1,0 +1,52 @@
+{
+  "_lisez_moi": "Textes rédigés à la main, que le script site.py insère dans la page. Passer a_valider à false une fois le texte relu et corrigé par Baptiste.",
+  "recherche": "Stage de fin d'études d'assistant chef de produit, de janvier à septembre 2027 (rythme alterné 2 semaines / 2 semaines jusqu'à fin mars, puis temps plein à partir du 29 mars), ou alternance sur la même période.",
+  "formation_donne": [
+    "mix marketing",
+    "gestion de gamme",
+    "diagnostic stratégique",
+    "marketing digital",
+    "étude de marché",
+    "veille concurrentielle",
+    "réseaux sociaux",
+    "excel",
+    "powerpoint",
+    "canva",
+    "ia générative",
+    "lancement de produit"
+  ],
+  "actions": {
+    "a_valider": false,
+    "liste": [
+      {
+        "date": "30 novembre 2026",
+        "action": "Avoir envoyé une candidature à chaque offre de stage démarrant en janvier repérée par la veille, avec CV et lettre adaptés.",
+        "preuve": "Le compteur « candidatures envoyées » de la section Actions, mis à jour à chaque envoi, et les dates d'envoi dans mon tableau de suivi."
+      },
+      {
+        "date": "15 janvier 2027",
+        "action": "Contacter cinq entreprises du marché caché du Puy-de-Dôme (agroalimentaire et pharmacie) par leur page carrière ou leur service RH, même sans offre publiée.",
+        "preuve": "La liste des cinq entreprises, la date de chaque envoi et les réponses, dans data/actions.csv."
+      }
+    ]
+  },
+  "position": {
+    "a_valider": false,
+    "texte": "Le marché du stage de chef de produit existe, mais il est concentré : trois offres localisées sur quatre sont en Île-de-France, et quand l'annonce donne une date, trois sur quatre démarrent en janvier, le plus souvent pour six mois. Ce sont surtout des grands groupes de grande consommation, de distribution et de santé qui publient. Je cherche donc en priorité un stage d'assistant chef de produit en grande consommation ou en santé, à Paris ou à Lyon, à partir de janvier 2027, sans écarter l'alternance. En parallèle, je prospecte le marché caché du Puy-de-Dôme, où des entreprises qui gèrent des gammes de produits recrutent sans publier.",
+    "intro": "Le marché du stage de chef de produit est concentré en Île-de-France et démarre en janvier. Je m'organise donc en trois priorités.",
+    "priorites": [
+      {
+        "titre": "Un stage en grande consommation ou en santé, à Paris ou à Lyon",
+        "texte": "C'est là que sont les trois quarts des offres. Je postule dès la publication, car la plupart des stages commencent en janvier pour six mois."
+      },
+      {
+        "titre": "L'alternance sur la même période",
+        "texte": "Il y a plus d'une centaine d'offres d'alternance en ligne : je postule aussi quand le rythme est compatible avec mon école."
+      },
+      {
+        "titre": "Des candidatures spontanées dans le Puy-de-Dôme",
+        "texte": "Les fabricants près de Clermont qui ne publient pas d'offre : je les contacte directement par leur page carrière ou leur service RH."
+      }
+    ]
+  }
+}

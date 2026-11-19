@@ -1,0 +1,136 @@
+{
+ "canaux": "Adzuna (5 requêtes), La bonne alternance (ROME M1703 et M1705, 9 villes, 100 km), Jooble (6 requêtes, clé arrivée tardivement), France Travail (identifiants absents)",
+ "requetes_adzuna": [
+  "stage chef de produit",
+  "alternance chef de produit",
+  "stage product manager",
+  "alternance marketing produit",
+  "stage assistant chef de produit"
+ ],
+ "filtre": "Titre de type chef de produit / marketing produit, stage ou alternance, publiée depuis 14 jours au plus, poste en France, hors senior/CDI/développeur",
+ "script": "https://github.com/baptistevelosoferreira-coder/candidatures-auto (dépôt privé : scripts/collecte.py, Action quotidienne collecte.yml)",
+ "limites": "« brutes » additionne les résultats de toutes les requêtes avant dédoublonnage ; « retenues » compte les offres après filtre. Une même offre peut revenir plusieurs jours tant qu'elle a moins de 14 jours.",
+ "serie": [
+  {
+   "date": "2026-11-05",
+   "brutes": 822,
+   "retenues": 63,
+   "par_source": {
+    "Adzuna": 60,
+    "La bonne alternance": 3
+   },
+   "erreurs": []
+  },
+  {
+   "date": "2026-11-06",
+   "brutes": 191,
+   "retenues": 29,
+   "par_source": {
+    "Adzuna": 29
+   },
+   "erreurs": []
+  },
+  {
+   "date": "2026-11-07",
+   "brutes": 550,
+   "retenues": 37,
+   "par_source": {
+    "Adzuna": 37
+   },
+   "erreurs": []
+  },
+  {
+   "date": "2026-11-08",
+   "brutes": 357,
+   "retenues": 14,
+   "par_source": {
+    "Adzuna": 14
+   },
+   "erreurs": []
+  },
+  {
+   "date": "2026-11-09",
+   "brutes": 325,
+   "retenues": 8,
+   "par_source": {
+    "Adzuna": 8
+   },
+   "erreurs": []
+  },
+  {
+   "date": "2026-11-10",
+   "brutes": 383,
+   "retenues": 12,
+   "par_source": {
+    "Adzuna": 12
+   },
+   "erreurs": []
+  },
+  {
+   "date": "2026-11-11",
+   "brutes": 430,
+   "retenues": 22,
+   "par_source": {
+    "Adzuna": 22
+   },
+   "erreurs": []
+  },
+  {
+   "date": "2026-11-12",
+   "brutes": 377,
+   "retenues": 12,
+   "par_source": {
+    "Adzuna": 12
+   },
+   "erreurs": []
+  },
+  {
+   "date": "2026-11-13",
+   "brutes": 374,
+   "retenues": 8,
+   "par_source": {
+    "Adzuna": 8
+   },
+   "erreurs": []
+  },
+  {
+   "date": "2026-11-14",
+   "brutes": 455,
+   "retenues": 18,
+   "par_source": {
+    "Adzuna": 17,
+    "La bonne alternance": 1
+   },
+   "erreurs": []
+  },
+  {
+   "date": "2026-11-15",
+   "brutes": 255,
+   "retenues": 11,
+   "par_source": {
+    "Adzuna": 11
+   },
+   "erreurs": [
+    "adzuna: 503 Server Error: Service Temporarily Unavailable for url: https://api.adzuna.com/v1/api/jobs/fr/search/1?app_id=***&app_key=***&what=stage+chef+de+produit&results_per_page=50&max_days_old=14&content-type=application%2Fjson"
+   ]
+  },
+  {
+   "date": "2026-11-16",
+   "brutes": 397,
+   "retenues": 9,
+   "par_source": {
+    "Adzuna": 9
+   },
+   "erreurs": []
+  },
+  {
+   "date": "2026-11-17",
+   "brutes": 202,
+   "retenues": 8,
+   "par_source": {
+    "Adzuna": 8
+   },
+   "erreurs": []
+  }
+ ]
+}

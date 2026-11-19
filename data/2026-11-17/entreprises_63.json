@@ -1,0 +1,14 @@
+{
+ "date": "2026-11-17",
+ "canal": "API Recherche d'entreprises (data.gouv)",
+ "requete": {
+  "departement": "63",
+  "activite_principale": "10.11Z,10.13A,10.13B,10.20Z,10.32Z,10.39A,10.39B,10.41A,10.51A,10.51B,10.51C,10.51D,10.52Z,10.61A,10.62Z,10.71A,10.72Z,10.73Z,10.82Z,10.83Z,10.84Z,10.85Z,10.86Z,10.89Z,10.91Z,10.92Z,11.01Z,11.02A,11.05Z,11.07A,11.07B,20.41Z,20.42Z,21.10Z,21.20Z,22.11Z,22.19Z,22.22Z,22.29A,32.30Z,32.40Z,32.50A,46.38B,46.39B,46.45Z,46.46Z,46.49Z",
+  "tranche_effectif_salarie": "12,21,22,31,32,41,42,51,52,53",
+  "etat_administratif": "A",
+  "per_page": 25
+ },
+ "total_api": 141,
+ "lignes": 141,
+ "limites": "Sirene ne dit pas qui emploie un chef de produit : la liste repose sur le secteur (NAF) et la taille. Une entreprise est retenue si au moins un de ses établissements est dans le 63 ; son siège peut être ailleurs (colonne siege_hors_63). La tranche d'effectif est celle de toute l'entreprise."
+}
